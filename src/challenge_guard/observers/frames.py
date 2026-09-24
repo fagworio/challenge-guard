@@ -28,11 +28,11 @@ _MIN_CHALLENGE_SIDE = 40
 
 #: Segmento de caminho que e um identificador opaco, nao estrutura.
 #:
-#: Achado real: o hCaptcha serve
-#: `/captcha/v1/633567452af282a792b41ae854a73508f80017fa/static/...`, ou seja, o
-#: token `se` da conta viaja NO CAMINHO. Registrar o caminho literal (a) vaza o
-#: identificador e (b) faz o fingerprint mudar quando o provedor troca o id,
-#: inventando rodada nova sem nada ter mudado de forma.
+#: Achado real: o provedor serve `/captcha/v1/<id-da-conta>/static/...`, ou
+#: seja, o identificador da conta viaja NO CAMINHO. Registrar o caminho literal
+#: (a) vaza o identificador e (b) faz o fingerprint mudar quando o provedor
+#: troca o id, inventando rodada nova sem nada ter mudado de forma. O valor
+#: concreto observado nao entra nem aqui: o exemplo fica com placeholder.
 _OPAQUE_SEGMENT = re.compile(r"^(?:[0-9a-fA-F]{8,}|[A-Za-z0-9_-]{20,})$")
 
 

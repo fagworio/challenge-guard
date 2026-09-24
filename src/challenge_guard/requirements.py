@@ -104,3 +104,29 @@ def requirements_for(provider: ChallengeProvider) -> tuple[ChallengeNetworkRequi
 
     profile = profile_for(provider)
     return profile.network_requirements if profile else ()
+
+
+def runtime_read_hosts(providers: "list[str] | None" = None) -> set[str]:
+    """Hosts que a pagina precisa ALCANCAR (leitura) para o widget carregar.
+
+    Sem eles o desafio nem aparece e "resolver manualmente" fica impossivel — o
+    humano veria um botao que nao faz nada. E descricao de requisito, nao
+    concessao: quem autoriza leitura e o host.
+    """
+    from .models import ChallengeProvider
+    from .providers.registry import profile_for
+
+    names = list(providers) if providers is not None else [item.value for item in ChallengeProvider]
+    hosts: set[str] = set()
+    for name in names:
+        try:
+            provider = ChallengeProvider(name)
+        except ValueError:
+            continue
+        profile = profile_for(provider)
+        if profile is None:
+            continue
+        hosts.update(profile.frame_hosts)
+        hosts.update(profile.runtime_hosts)
+        hosts.update(profile.widget_hosts)
+    return hosts

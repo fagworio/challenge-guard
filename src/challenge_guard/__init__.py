@@ -14,6 +14,7 @@ contrato: ver docs/adr/0001-challenge-boundary.md.
 from .browser.protocol import BrowserChallengeAdapter
 from .evidence import ChallengeEvidence, EvidenceLeak, redact
 from .fingerprint import structural_fingerprint
+from .handoff import HandoffContinuation, HumanHandoff, UnsafeHandoff, build_handoff
 from .models import (
     ChallengeDecision,
     ChallengeDecisionStatus,
@@ -37,6 +38,7 @@ from .observers import (
     ResponseRecord,
     merge,
 )
+from .monitor import ChallengeMonitor, challenge_type_of, supported_providers
 from .policy import ChallengePolicy
 from .providers import (
     ChallengeProviderProfile,
@@ -47,7 +49,12 @@ from .providers import (
     profile_for_host,
     profiles,
 )
-from .requirements import ChallengeNetworkPurpose, ChallengeNetworkRequirement, requirements_for
+from .requirements import (
+    ChallengeNetworkPurpose,
+    ChallengeNetworkRequirement,
+    requirements_for,
+    runtime_read_hosts,
+)
 from .signals import (
     ChallengeSignal,
     ChallengeSignalKind,
@@ -70,6 +77,9 @@ __all__ = [
     "ChallengeNetworkPurpose",
     "ChallengeNetworkRequirement",
     "EvidenceLeak",
+    "HandoffContinuation",
+    "HumanHandoff",
+    "UnsafeHandoff",
     "ChallengeSignal",
     "ChallengeSignalKind",
     "ChallengeProviderProfile",
@@ -86,6 +96,7 @@ __all__ = [
     "corroborated_confidence",
     "has_kind",
     "independent_sources",
+    "build_handoff",
     "merge",
     "profile_for",
     "profile_for_frame",
@@ -93,11 +104,15 @@ __all__ = [
     "profiles",
     "redact",
     "requirements_for",
+    "runtime_read_hosts",
     "source_votes",
+    "challenge_type_of",
     "strongest",
+    "supported_providers",
     "ChallengeDecisionStatus",
     "ChallengeObservation",
     "ChallengePhase",
+    "ChallengeMonitor",
     "ChallengePolicy",
     "ChallengeProvider",
     "ChallengeRoundObservation",

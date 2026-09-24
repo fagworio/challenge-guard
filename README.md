@@ -36,8 +36,9 @@ assert decision.human_required is True
 # O guard pede a pessoa e continua observando — nunca interage com o desafio.
 ```
 
-A `ChallengeMonitor` conveniente para o host chega em CG-019; hoje a API publica e o
-dominio puro, sem dependencia de browser.
+O monitor aceita um browser opcional e compoe os observadores por dentro. Sem browser o
+nucleo continua puro: o adapter do Playwright so e importado quando um browser e de fato
+fornecido, entao `import challenge_guard` nunca puxa uma dependencia opcional.
 
 ## What it will never do
 
@@ -75,7 +76,17 @@ Roadmap CG-001 .. CG-006 are implemented:
 | CG-014 | Playwright adapter (optional extra, thin) | done |
 | CG-015 | human observation lifecycle | done |
 | CG-015A | passive provider reconnaissance, real fixtures, registry gate | done |
-| CG-016 .. CG-020 | visual boundary, handoff object, public API, release | pending |
+| CG-018 | HumanHandoff (neutral, host enriches) | done |
+| CG-019 | public API: `ChallengeMonitor` and a small surface | done |
+| CG-020 | release v0.1.0 (wheel proven in an empty environment) | done |
+| CG-016, CG-017 | visual classifier and its privacy gate | **deferred to 0.2.0** |
+
+CG-016/CG-017 are deferred deliberately. The visual classifier would only earn its
+place if it fixed a case that is currently misclassified, and the reconnaissance showed the
+structural observers already carry the real cases. Adding vision now would widen the
+privacy surface (screenshots) without a demonstrated benefit. The boundary is already
+written down in [ADR 0003](docs/adr/0003-visual-observation-boundary.md), so the first
+implementation has a shape to fit whenever it is justified.
 
 ## Real-world fixtures
 

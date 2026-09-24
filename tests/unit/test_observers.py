@@ -239,7 +239,7 @@ def test_frame_path_shape_normalises_opaque_segments():
     """
     from challenge_guard.observers.frames import path_shape
 
-    assert path_shape("/captcha/v1/633567452af282a792b41ae854a73508f80017fa/static/x.html") == (
+    assert path_shape("/captcha/v1/0123456789abcdef0123456789abcdef/static/x.html") == (
         "/captcha/v1/:id/static/x.html"
     )
     # Caminhos com palavras continuam intactos: e o que discrimina Enterprise.
@@ -248,7 +248,7 @@ def test_frame_path_shape_normalises_opaque_segments():
 
 
 def test_a_token_in_the_frame_path_does_not_reach_the_structure():
-    opaque = "633567452af282a792b41ae854a73508f80017fa"
+    opaque = "0123456789abcdef0123456789abcdef"
     result = FrameObserver().observe(
         [FrameInfo(f"https://newassets.hcaptcha.com/captcha/v1/{opaque}/static/x.html", width=300, height=400)]
     )
