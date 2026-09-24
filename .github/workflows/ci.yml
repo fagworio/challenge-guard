@@ -1,0 +1,54 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e . "pytest>=8,<9"
+      - name: Tests
+        run: pytest -q
+      - name: Compile
+        run: python -m compileall -q src
+
+  boundary:
+    # A fronteira do projeto e a ausencia de capacidades: se uma funcao de
+    # resolver/contornar aparecer, o build quebra.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: No solving or evasion API may exist
+        run: |
+          python - <<'PY'
+          import ast, pathlib, sys
+          banned = ("solve", "bypass", "stealth", "answer_captcha", "inject_token", "spoof")
+          offenders = []
+          for source in pathlib.Path("src").rglob("*.py"):
+              tree = ast.parse(source.read_text(encoding="utf-8"))
+              for node in ast.walk(tree):
+                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                      name = node.name.casefold()
+                      if any(token in name for token in banned):
+                          offenders.append(f"{source}:{node.lineno} {node.name}")
+          if offenders:
+              print("boundary violation:", *offenders, sep="\n  ")
+              sys.exit(1)
+          print("boundary intact")
+          PY

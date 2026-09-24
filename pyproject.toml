@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "challenge-guard"
+version = "0.1.0"
+description = "Detects, observes and classifies anti-bot challenges without ever solving them."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = []
+
+[project.optional-dependencies]
+playwright = ["playwright>=1.48,<2"]
+vision = []
+all = ["playwright>=1.48,<2"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/challenge_guard"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+pythonpath = ["src"]
+markers = [
+    "requires_playwright: test needs the optional Playwright extra",
+]
