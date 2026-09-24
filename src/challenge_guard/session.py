@@ -214,6 +214,19 @@ class ChallengeSessionTracker:
 
     # -- interno ---------------------------------------------------------------
 
+    @staticmethod
+    def _refine_knowledge(session: ChallengeSession, observation: ChallengeObservation) -> None:
+        if observation.provider is ChallengeProvider.UNKNOWN:
+            return
+        known = session.provider is not ChallengeProvider.UNKNOWN
+        if known and observation.provider is not session.provider:
+            if observation.confidence <= session.provider_confidence:
+                return
+        session.provider = observation.provider
+        session.provider_confidence = observation.confidence
+        if observation.challenge_type is not ChallengeType.UNKNOWN:
+            session.challenge_type = observation.challenge_type
+
     def _record_round(
         self,
         session: ChallengeSession,
@@ -225,10 +238,10 @@ class ChallengeSessionTracker:
         fingerprint = structural_fingerprint(observation)
         session.rounds_observed += 1
         session.structure_hash = fingerprint
-        if observation.provider is not ChallengeProvider.UNKNOWN:
-            session.provider = observation.provider
-        if observation.challenge_type is not ChallengeType.UNKNOWN:
-            session.challenge_type = observation.challenge_type
+        # Conhecimento e monotonico salvo evidencia mais forte: uma rodada cega
+        # (UNKNOWN) nunca apaga o que ja sabiamos, e trocar por um provider
+        # diferente exige confianca MAIOR do que a que estabeleceu o atual.
+        self._refine_knowledge(session, observation)
         session.phase = observation.phase
         round_observation = ChallengeRoundObservation(
             session_id=session.id,

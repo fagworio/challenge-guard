@@ -65,7 +65,12 @@ Roadmap CG-001 .. CG-006 are implemented:
 | CG-004 | session state machine (invalid transitions raise) | done |
 | CG-005 | structural fingerprinting | done |
 | CG-006 | policy engine and precedence rules | done |
-| CG-007 .. CG-020 | observers, providers, Playwright, vision, handoff, release | pending |
+| CG-007 | DOM observer (structure only) | done |
+| CG-008 | frame observer (host and shape) | done |
+| CG-009 | network observer (redacted metadata) | done |
+| CG-010 | response observer (phrase to concept) | done |
+| CG-011 | provider registry (hCaptcha, reCAPTCHA, Enterprise, generic) | done |
+| CG-012 .. CG-020 | network requirements, evidence, Playwright, vision, handoff, release | pending |
 
 ## Precedence rules
 
@@ -78,7 +83,26 @@ The order in `policy.py` **is** the specification:
 5. An interactive challenge before any write is `NEEDS_HUMAN`.
 6. A non-interactive challenge (`invisible`, `risk_assessment`) is only observed — it may clear by
    itself, and demanding a person would be a false positive.
-7. Weak detection is `UNKNOWN`. A status code alone never classifies CAPTCHA.
+7. A non-interactive challenge that the provider explicitly demanded is escalated anyway: the
+   server said a challenge is required.
+8. Weak detection is `UNKNOWN`. A status code alone never classifies CAPTCHA.
+
+## How a decision is reached
+
+Observers see concrete things; the policy only sees concepts.
+
+```text
+raw response
+  -> ResponseObserver
+  -> provider profile      # the only place concrete phrases live
+  -> ChallengeSignal(kind=VERIFICATION_REJECTED, source="response")
+  -> policy
+  -> PROVIDER_REJECTED
+```
+
+`policy.py` is asserted to contain no provider phrase and no vendor name, so provider vocabulary
+cannot creep back into the decision logic. Provider data lives in `providers/registry.py`, which is
+asserted to contain no ATS vendor — source included, comments included.
 
 ## Install
 

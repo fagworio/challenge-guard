@@ -13,7 +13,14 @@ from challenge_guard import (
     ChallengeSessionTracker,
     ChallengeType,
     ReasonToken,
+    ResponseObserver,
+    ResponseRecord,
 )
+
+
+def _signals(text: str, status: int | None = None):
+    """Sinais normalizados a partir de texto de resposta, como em producao."""
+    return ResponseObserver().observe([ResponseRecord(status=status, text=text)]).signals
 
 
 def _observation(**overrides):
@@ -25,8 +32,16 @@ def _observation(**overrides):
         "visible": True,
         "confidence": 0.9,
     }
+    text = overrides.pop("response_text", "")
+    status = overrides.pop("response_status", None)
     data.update(overrides)
-    return ChallengeObservation(**data)
+    observation = ChallengeObservation(**data)
+    if text:
+        from dataclasses import replace
+
+        result = ResponseObserver().observe([ResponseRecord(status=status, text=text)])
+        observation = replace(observation, signals=result.signals, provider=result.provider or observation.provider)
+    return observation
 
 
 # --- 1. confirmacao real vence ------------------------------------------------
@@ -81,7 +96,7 @@ def test_write_sent_plus_anti_bot_evidence_is_a_provider_rejection():
             phase=ChallengePhase.POST_SUBMIT,
             browser_write_sent=True,
             http_status=400,
-            response_signals=("There was an error verifying your application.",),
+            response_text="There was an error verifying your application. Please try again.",
         ),
         None,
     )
@@ -96,7 +111,7 @@ def test_http_428_with_the_recaptcha_message_is_a_rejection():
             phase=ChallengePhase.SUBMITTING,
             browser_write_sent=True,
             http_status=428,
-            response_signals=("Please complete the reCAPTCHA and resubmit your application.",),
+            response_text="Please complete the reCAPTCHA and resubmit your application.",
         ),
         None,
     )
@@ -110,7 +125,7 @@ def test_a_status_code_alone_never_classifies_captcha():
             phase=ChallengePhase.POST_SUBMIT,
             browser_write_sent=True,
             http_status=400,
-            response_signals=("Resume/CV is required.",),
+            response_text="Resume/CV is required.",
         ),
         None,
     )
@@ -202,9 +217,65 @@ def test_every_decision_carries_a_closed_set_reason_token():
     decisions = [
         policy.decide(_observation(), None),
         policy.decide(_observation(detected=False), None),
-        policy.decide(_observation(browser_write_sent=True, response_signals=("verification failed",)), None),
+        policy.decide(_observation(browser_write_sent=True, response_text="verification failed"), None),
         policy.decide(_observation(confidence=0.1), None),
         policy.decide(_observation(), None, submission_confirmed=True),
     ]
     for decision in decisions:
         assert decision.reason_token in {token.value for token in ReasonToken}
+
+
+# --- fase + efeito observado (refinamento) ------------------------------------
+
+
+def test_an_invisible_challenge_on_page_load_that_blocks_nothing_is_only_observed():
+    """Nao pedir humano cedo demais por causa de um selo que talvez se resolva."""
+    observation = _observation(
+        phase=ChallengePhase.PAGE_LOAD,
+        challenge_type=ChallengeType.INVISIBLE,
+        visible=False,
+        provider=ChallengeProvider.RECAPTCHA_ENTERPRISE,
+    )
+    decision = ChallengePolicy().decide(observation, None)
+    assert decision.status is ChallengeDecisionStatus.OBSERVE
+    assert decision.human_required is False
+
+
+def test_the_same_invisible_challenge_after_a_rejected_write_is_a_rejection():
+    """O mesmo tipo, em SUBMITTING e com recusa inequivoca, nao pode passar batido."""
+    observation = _observation(
+        phase=ChallengePhase.SUBMITTING,
+        challenge_type=ChallengeType.INVISIBLE,
+        visible=False,
+        provider=ChallengeProvider.RECAPTCHA_ENTERPRISE,
+        browser_write_sent=True,
+        http_status=428,
+        response_text="Please complete the reCAPTCHA and resubmit your application.",
+    )
+    decision = ChallengePolicy().decide(observation, None)
+    assert decision.status is ChallengeDecisionStatus.PROVIDER_REJECTED
+    assert decision.human_required is True
+
+
+def test_a_provider_demanding_the_challenge_escalates_even_when_the_type_is_invisible():
+    """O pedido explicito do provedor vence o tipo observado."""
+    observation = _observation(
+        phase=ChallengePhase.PRE_SUBMIT,
+        challenge_type=ChallengeType.RISK_ASSESSMENT,
+        browser_write_sent=False,
+        response_text="Please complete the reCAPTCHA to continue.",
+    )
+    decision = ChallengePolicy().decide(observation, None)
+    assert decision.status is ChallengeDecisionStatus.NEEDS_HUMAN
+    assert decision.human_required is True
+
+
+def test_a_form_error_that_merely_mentions_verification_is_not_a_captcha():
+    """Ruido de formulario nao pode virar rejeicao anti-bot."""
+    observation = _observation(
+        phase=ChallengePhase.POST_SUBMIT,
+        browser_write_sent=True,
+        http_status=400,
+        response_text="Email verification is pending for this account.",
+    )
+    assert ChallengePolicy().decide(observation, None).status is ChallengeDecisionStatus.OBSERVE

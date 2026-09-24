@@ -9,6 +9,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:  # pragma: no cover - apenas para tipagem
+    from .signals import ChallengeSignal
 
 
 class ChallengeProvider(str, Enum):
@@ -126,6 +130,9 @@ class ChallengeObservation:
     frame_signals: tuple[str, ...] = ()
     network_signals: tuple[str, ...] = ()
     response_signals: tuple[str, ...] = ()
+    #: Sinais normalizados com proveniencia (ver signals.py). A policy le
+    #: SOMENTE isto: textos concretos de provedor nao pertencem ao dominio.
+    signals: tuple["ChallengeSignal", ...] = ()
     challenge_dimensions: tuple[int, int] | None = None
     confidence: float = 0.0
 
@@ -185,6 +192,9 @@ class ChallengeSession:
     visible: bool = False
     dynamic_content: bool = False
     structure_hash: str = ""
+    #: Confianca da rodada que estabeleceu o provider atual. Serve a regra de
+    #: conhecimento monotonico: so evidencia mais forte substitui o que ja se sabe.
+    provider_confidence: float = 0.0
     rounds: list[ChallengeRoundObservation] = field(default_factory=list)
 
     @property

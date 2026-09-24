@@ -187,3 +187,44 @@ def test_provider_and_type_are_not_downgraded_by_a_blind_observation():
     )
     assert session.provider is ChallengeProvider.HCAPTCHA
     assert session.challenge_type is ChallengeType.IMAGE_SELECTION
+
+
+# --- conhecimento monotonico -------------------------------------------------
+
+
+def test_a_blind_round_never_erases_what_we_already_knew():
+    """UNKNOWN nao e evidencia contra: conhecimento so cresce."""
+    tracker = ChallengeSessionTracker()
+    session = tracker.start(_observation())
+    tracker.observe(
+        session,
+        _observation(provider=ChallengeProvider.UNKNOWN, challenge_type=ChallengeType.UNKNOWN),
+    )
+    assert session.provider is ChallengeProvider.HCAPTCHA
+    assert session.challenge_type is ChallengeType.IMAGE_SELECTION
+
+
+def test_a_weaker_identification_cannot_replace_a_stronger_one():
+    tracker = ChallengeSessionTracker()
+    session = tracker.start(_observation())  # estabelecido com confianca 0.9
+    tracker.observe(session, _observation(provider=ChallengeProvider.RECAPTCHA, confidence=0.6))
+    assert session.provider is ChallengeProvider.HCAPTCHA
+    assert session.provider_confidence == pytest.approx(0.9)
+
+
+def test_stronger_evidence_may_refine_the_identification():
+    tracker = ChallengeSessionTracker()
+    session = tracker.start(_observation())
+    tracker.observe(session, _observation(provider=ChallengeProvider.RECAPTCHA, confidence=0.99))
+    assert session.provider is ChallengeProvider.RECAPTCHA
+    assert session.provider_confidence == pytest.approx(0.99)
+
+
+def test_an_unknown_provider_can_be_established_later():
+    tracker = ChallengeSessionTracker()
+    session = tracker.start(
+        _observation(provider=ChallengeProvider.UNKNOWN, challenge_type=ChallengeType.UNKNOWN)
+    )
+    assert session.provider is ChallengeProvider.UNKNOWN
+    tracker.observe(session, _observation(provider=ChallengeProvider.TURNSTILE, confidence=0.7))
+    assert session.provider is ChallengeProvider.TURNSTILE

@@ -24,7 +24,27 @@ from .models import (
     ChallengeType,
     ReasonToken,
 )
+from .observers import (
+    DOMObserver,
+    FrameInfo,
+    FrameObserver,
+    NetworkObserver,
+    NetworkRecord,
+    ObserverResult,
+    ResponseObserver,
+    ResponseRecord,
+    merge,
+)
 from .policy import ChallengePolicy
+from .providers import (
+    ChallengeProviderProfile,
+    PROFILES,
+    ResponseMarker,
+    profile_for,
+    profile_for_host,
+    profiles,
+)
+from .signals import ChallengeSignal, ChallengeSignalKind, has_kind, strongest
 from .session import (
     ChallengeSessionTracker,
     InvalidChallengeTransition,
@@ -33,6 +53,25 @@ from .session import (
 
 __all__ = [
     "ChallengeDecision",
+    "ChallengeSignal",
+    "ChallengeSignalKind",
+    "ChallengeProviderProfile",
+    "DOMObserver",
+    "FrameInfo",
+    "FrameObserver",
+    "NetworkObserver",
+    "NetworkRecord",
+    "ObserverResult",
+    "PROFILES",
+    "ResponseMarker",
+    "ResponseObserver",
+    "ResponseRecord",
+    "has_kind",
+    "merge",
+    "profile_for",
+    "profile_for_host",
+    "profiles",
+    "strongest",
     "ChallengeDecisionStatus",
     "ChallengeObservation",
     "ChallengePhase",
