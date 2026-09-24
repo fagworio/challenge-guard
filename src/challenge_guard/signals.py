@@ -79,3 +79,37 @@ def strongest(signals: tuple[ChallengeSignal, ...], kind: ChallengeSignalKind) -
 def has_kind(signals: tuple[ChallengeSignal, ...], *kinds: ChallengeSignalKind) -> bool:
     wanted = set(kinds)
     return any(signal.kind in wanted for signal in signals)
+
+
+def independent_sources(signals: tuple[ChallengeSignal, ...]) -> tuple[str, ...]:
+    """Fontes que emitiram sinal, cada uma contando UMA vez.
+
+    Existe porque varios marcadores do mesmo observer foram, por um momento,
+    tratados como evidencias independentes: dois seletores de DOM casando
+    inflavam a confianca sem nada a mais ter sido observado.
+    """
+    return tuple(dict.fromkeys(signal.source for signal in signals if signal.source))
+
+
+def source_votes(signals: tuple[ChallengeSignal, ...]) -> dict[str, ChallengeSignal]:
+    """O sinal mais forte de cada fonte — um voto por fonte, no maximo."""
+    votes: dict[str, ChallengeSignal] = {}
+    for signal in signals:
+        current = votes.get(signal.source)
+        if current is None or signal.confidence > current.confidence:
+            votes[signal.source] = signal
+    return votes
+
+
+def corroborated_confidence(signals: tuple[ChallengeSignal, ...]) -> float:
+    """Confianca considerando corroboracao, nao volume.
+
+    Deliberadamente simples: o maior voto manda, e cada fonte independente
+    adicional acrescenta pouco. Nao e uma formula para maximizar numero — e para
+    impedir que 15 sinais do mesmo observer valham 15 provas.
+    """
+    votes = source_votes(signals)
+    if not votes:
+        return 0.0
+    best = max(signal.confidence for signal in votes.values())
+    return min(1.0, best + 0.05 * (len(votes) - 1))

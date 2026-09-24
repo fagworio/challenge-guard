@@ -25,10 +25,15 @@ import re
 
 from .models import ChallengeObservation
 
-#: Prefixos de sinal que carregam dado sensivel do desafio e por isso nao
-#: podem entrar no fingerprint, mesmo que um observador os produza.
+#: Sinais que carregam dado sensivel do desafio e por isso nao podem entrar no
+#: fingerprint, mesmo que um observador os produza.
+#:
+#: `tile` e `click` ficaram FORA de proposito: o reCAPTCHA usa classes como
+#: `rc-imageselect-tile` e `rc-imageselect-click`, que sao estrutura legitima.
+#: Uma lista agressiva demais recusaria paginas reais — falso positivo e tao ruim
+#: quanto falso negativo, porque derruba a observacao inteira.
 _FORBIDDEN_SIGNAL = re.compile(
-    r"(token|cookie|authorization|answer|solution|tile|click|response_text|payload)",
+    r"(token|cookie|authorization|answer|solution|response_text|payload)",
     re.IGNORECASE,
 )
 

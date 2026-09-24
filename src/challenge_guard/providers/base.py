@@ -11,10 +11,30 @@ aparecer, inclusive em comentario.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
+
+from dataclasses import dataclass
+from enum import Enum
 
 from ..models import ChallengeProvider, ChallengeType
 from ..signals import ChallengeSignalKind
+
+
+class EvidenceLevel(str, Enum):
+    """De onde veio o padrao. Metadado de manutencao/auditoria.
+
+    NAO altera a policy: um padrao INFERRED nao vira classificacao forte por
+    vontade propria. A distincao serve para saber, depois, o que veio de
+    producao, o que veio de fixture e o que foi suposto.
+    """
+
+    OBSERVED = "observed"
+    FIXTURE = "fixture"
+    INFERRED = "inferred"
+
+
+_MARKER_TOKEN = re.compile(r"^[a-z0-9_]{3,48}$")
 
 
 @dataclass(frozen=True)
@@ -25,6 +45,17 @@ class ResponseMarker:
     phrase: str
     kind: ChallengeSignalKind
     confidence: float
+    #: Procedencia do padrao. Sem URL e sem empresa: so o nivel e uma referencia
+    evidence_level: EvidenceLevel = EvidenceLevel.INFERRED
+    source_reference: str = ""
+
+    def __post_init__(self) -> None:
+        if not _MARKER_TOKEN.match(self.token):
+            raise ValueError(f"marker token must be a short controlled token, got {self.token!r}")
+        if not self.phrase:
+            raise ValueError("a response marker needs a phrase")
+        if not 0.0 <= self.confidence <= 1.0:
+            raise ValueError("confidence must be between 0 and 1")
 
 
 @dataclass(frozen=True)
@@ -49,6 +80,9 @@ class ChallengeProviderProfile:
 
     #: Hosts que hospedam o proprio widget (selo/badge).
     widget_hosts: tuple[str, ...] = field(default=())
+
+    #: O que o widget precisa alcancar, em termos de DESCRICAO (CG-012).
+    network_requirements: tuple = field(default=())
 
     def marker_for(self, text: str) -> ResponseMarker | None:
         """Primeiro marcador que casa com o texto, ou None."""

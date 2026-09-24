@@ -179,6 +179,27 @@ class ChallengePolicy:
             confidence=observation.confidence,
         )
 
+    def timed_out(
+        self,
+        provider: ChallengeProvider = ChallengeProvider.UNKNOWN,
+        *,
+        confidence: float = 0.0,
+    ) -> ChallengeDecision:
+        """A espera por um humano acabou sem desfecho.
+
+        Nao e `PROVIDER_REJECTED`: nada foi recusado — apenas nao terminou a
+        tempo. Continua precisando de humano, e o host decide se reoferece o
+        handoff.
+        """
+        return ChallengeDecision(
+            status=ChallengeDecisionStatus.UNKNOWN,
+            provider=provider,
+            reason_token=ReasonToken.HUMAN_OBSERVATION_TIMEOUT.value,
+            human_required=True,
+            retry_allowed=True,
+            confidence=confidence,
+        )
+
     @staticmethod
     def _observed_token(observation: ChallengeObservation) -> str:
         if observation.phase in PRE_SUBMISSION_PHASES:

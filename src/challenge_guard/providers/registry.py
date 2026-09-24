@@ -9,8 +9,23 @@ aqui — se um dia aparecer, a inteligencia anti-bot voltou a se acoplar ao boar
 from __future__ import annotations
 
 from ..models import ChallengeProvider, ChallengeType
+from ..requirements import ChallengeNetworkPurpose, ChallengeNetworkRequirement
 from ..signals import ChallengeSignalKind
-from .base import ChallengeProviderProfile, ResponseMarker
+from .base import ChallengeProviderProfile, EvidenceLevel, ResponseMarker
+
+
+def _runtime(provider: ChallengeProvider, origins: tuple[str, ...], paths: tuple[str, ...], budget: int) -> ChallengeNetworkRequirement:
+    return ChallengeNetworkRequirement(
+        provider=provider,
+        purpose=ChallengeNetworkPurpose.CHALLENGE_RUNTIME,
+        origins=origins,
+        # Os caminhos sao os observados em boards reais. Sem eles, um wildcard de
+        # origem autorizaria o dominio inteiro — exatamente o defeito ja visto
+        # numa policy de upload real (`*.dominio` + `^/.*$`). Aqui isso e
+        # impossivel por construcao.
+        path_patterns=paths,
+        max_requests=budget,
+    )
 
 #: Confianca de um texto de resposta que pede o challenge explicitamente.
 _REQUIRED_CONFIDENCE = 0.9
@@ -23,6 +38,14 @@ HCAPTCHA_PROFILE = ChallengeProviderProfile(
     frame_hosts=("hcaptcha.com", "newassets.hcaptcha.com"),
     runtime_hosts=("hcaptcha.com", "*.hcaptcha.com"),
     widget_hosts=("js.hcaptcha.com",),
+    network_requirements=(
+        _runtime(
+            ChallengeProvider.HCAPTCHA,
+            ("hcaptcha.com", "*.hcaptcha.com"),
+            (r"^/1/", r"^/captcha/", r"^/getcaptcha/", r"^/checkcaptcha/"),
+            20,
+        ),
+    ),
     dom_markers=(
         "h-captcha",
         "hcaptcha",
@@ -35,41 +58,58 @@ HCAPTCHA_PROFILE = ChallengeProviderProfile(
             phrase="verification failed",
             kind=ChallengeSignalKind.VERIFICATION_REJECTED,
             confidence=_REJECTED_CONFIDENCE,
+            evidence_level=EvidenceLevel.OBSERVED,
+            source_reference="board-real-2026-09",
         ),
         ResponseMarker(
             token="challenge_failed",
             phrase="challenge failed",
             kind=ChallengeSignalKind.VERIFICATION_REJECTED,
             confidence=_REJECTED_CONFIDENCE,
+            evidence_level=EvidenceLevel.INFERRED,
         ),
         ResponseMarker(
             token="complete_the_captcha",
             phrase="complete the captcha",
             kind=ChallengeSignalKind.CHALLENGE_REQUIRED,
             confidence=_REQUIRED_CONFIDENCE,
+            evidence_level=EvidenceLevel.INFERRED,
         ),
     ),
 )
 
 RECAPTCHA_PROFILE = ChallengeProviderProfile(
     provider=ChallengeProvider.RECAPTCHA,
+    network_requirements=(
+        _runtime(
+            ChallengeProvider.RECAPTCHA,
+            ("www.google.com", "www.gstatic.com", "www.recaptcha.net", "recaptcha.net"),
+            (r"^/recaptcha/",),
+            20,
+        ),
+    ),
     default_type=ChallengeType.CHECKBOX,
     frame_hosts=("www.google.com", "www.recaptcha.net", "recaptcha.net"),
     runtime_hosts=("www.google.com", "www.gstatic.com", "www.recaptcha.net", "recaptcha.net"),
     widget_hosts=("www.gstatic.com",),
-    dom_markers=("g-recaptcha", "grecaptcha", "g-recaptcha-response", "data-sitekey"),
+    # `data-sitekey` NAO entra: e usado por reCAPTCHA, hCaptcha e Turnstile, entao
+    # nao discrimina nada. Ele continua na estrutura como presenca de atributo.
+    dom_markers=("g-recaptcha", "grecaptcha", "g-recaptcha-response"),
     response_markers=(
         ResponseMarker(
             token="please_complete_the_recaptcha",
             phrase="please complete the recaptcha",
             kind=ChallengeSignalKind.CHALLENGE_REQUIRED,
             confidence=_REQUIRED_CONFIDENCE,
+            evidence_level=EvidenceLevel.OBSERVED,
+            source_reference="board-real-2026-09",
         ),
         ResponseMarker(
             token="captcha_verification",
             phrase="captcha verification",
             kind=ChallengeSignalKind.VERIFICATION_REJECTED,
             confidence=_REJECTED_CONFIDENCE,
+            evidence_level=EvidenceLevel.INFERRED,
         ),
     ),
 )
@@ -79,6 +119,14 @@ RECAPTCHA_PROFILE = ChallengeProviderProfile(
 #: policy esperar um widget que nunca aparece.
 RECAPTCHA_ENTERPRISE_PROFILE = ChallengeProviderProfile(
     provider=ChallengeProvider.RECAPTCHA_ENTERPRISE,
+    network_requirements=(
+        _runtime(
+            ChallengeProvider.RECAPTCHA_ENTERPRISE,
+            ("www.google.com", "www.gstatic.com", "www.recaptcha.net", "recaptcha.net"),
+            (r"^/recaptcha/",),
+            20,
+        ),
+    ),
     default_type=ChallengeType.INVISIBLE,
     frame_hosts=("www.google.com", "www.recaptcha.net", "recaptcha.net"),
     runtime_hosts=("www.google.com", "www.gstatic.com", "www.recaptcha.net", "recaptcha.net"),
@@ -104,18 +152,22 @@ RECAPTCHA_ENTERPRISE_PROFILE = ChallengeProviderProfile(
             phrase="verifying your application",
             kind=ChallengeSignalKind.VERIFICATION_REJECTED,
             confidence=_REJECTED_CONFIDENCE,
+            evidence_level=EvidenceLevel.OBSERVED,
+            source_reference="board-real-2026-09",
         ),
         ResponseMarker(
             token="error_verifying",
             phrase="error verifying",
             kind=ChallengeSignalKind.VERIFICATION_REJECTED,
             confidence=_REJECTED_CONFIDENCE,
+            evidence_level=EvidenceLevel.INFERRED,
         ),
         ResponseMarker(
             token="unable_to_verify",
             phrase="unable to verify",
             kind=ChallengeSignalKind.VERIFICATION_REJECTED,
             confidence=0.85,
+            evidence_level=EvidenceLevel.INFERRED,
         ),
     ),
 )
@@ -132,6 +184,7 @@ GENERIC_PROFILE = ChallengeProviderProfile(
             phrase="captcha required",
             kind=ChallengeSignalKind.CHALLENGE_REQUIRED,
             confidence=0.8,
+            evidence_level=EvidenceLevel.INFERRED,
         ),
     ),
 )

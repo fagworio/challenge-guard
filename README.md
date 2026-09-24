@@ -70,7 +70,11 @@ Roadmap CG-001 .. CG-006 are implemented:
 | CG-009 | network observer (redacted metadata) | done |
 | CG-010 | response observer (phrase to concept) | done |
 | CG-011 | provider registry (hCaptcha, reCAPTCHA, Enterprise, generic) | done |
-| CG-012 .. CG-020 | network requirements, evidence, Playwright, vision, handoff, release | pending |
+| CG-012 | challenge network requirements (describe, never authorise) | done |
+| CG-013 | evidence redaction (allowlist, property-tested) | done |
+| CG-014 | Playwright adapter (optional extra, thin) | done |
+| CG-015 | human observation lifecycle | done |
+| CG-016 .. CG-020 | visual boundary, handoff object, public API, release | pending |
 
 ## Precedence rules
 
@@ -111,10 +115,20 @@ pip install challenge-guard            # core, no browser dependency
 pip install challenge-guard[playwright]
 ```
 
+The Playwright adapter lives in `challenge_guard.browser` and is not exported from the package root,
+so importing `challenge_guard` never pulls Playwright in.
+
 ## Development
 
 ```bash
 PYTHONPATH=src pytest
+```
+
+Browser tests need the optional extra and skip without it:
+
+```bash
+pip install -e ".[playwright]" && playwright install chromium
+PYTHONPATH=src pytest tests/integration
 ```
 
 ## License

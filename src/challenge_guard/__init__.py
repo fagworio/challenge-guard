@@ -11,6 +11,8 @@ responda, contorne ou falsifique um desafio. Nao ha `solve`, `bypass`,
 contrato: ver docs/adr/0001-challenge-boundary.md.
 """
 
+from .browser.protocol import BrowserChallengeAdapter
+from .evidence import ChallengeEvidence, EvidenceLeak, redact
 from .fingerprint import structural_fingerprint
 from .models import (
     ChallengeDecision,
@@ -44,7 +46,16 @@ from .providers import (
     profile_for_host,
     profiles,
 )
-from .signals import ChallengeSignal, ChallengeSignalKind, has_kind, strongest
+from .requirements import ChallengeNetworkPurpose, ChallengeNetworkRequirement, requirements_for
+from .signals import (
+    ChallengeSignal,
+    ChallengeSignalKind,
+    corroborated_confidence,
+    has_kind,
+    independent_sources,
+    source_votes,
+    strongest,
+)
 from .session import (
     ChallengeSessionTracker,
     InvalidChallengeTransition,
@@ -52,7 +63,12 @@ from .session import (
 )
 
 __all__ = [
+    "BrowserChallengeAdapter",
     "ChallengeDecision",
+    "ChallengeEvidence",
+    "ChallengeNetworkPurpose",
+    "ChallengeNetworkRequirement",
+    "EvidenceLeak",
     "ChallengeSignal",
     "ChallengeSignalKind",
     "ChallengeProviderProfile",
@@ -66,11 +82,16 @@ __all__ = [
     "ResponseMarker",
     "ResponseObserver",
     "ResponseRecord",
+    "corroborated_confidence",
     "has_kind",
+    "independent_sources",
     "merge",
     "profile_for",
     "profile_for_host",
     "profiles",
+    "redact",
+    "requirements_for",
+    "source_votes",
     "strongest",
     "ChallengeDecisionStatus",
     "ChallengeObservation",

@@ -71,9 +71,17 @@ def test_provider_and_type_participate():
     )
 
 
+def test_real_structure_class_names_are_accepted():
+    """Falso positivo derruba a observacao: classes reais nao podem ser recusadas."""
+    for structural in ("rc-imageselect-tile", "rc-imageselect-click", "grid-4x4", "data-sitekey"):
+        assert structural_fingerprint(_observation(dom_signals=(structural,)))
+
+
 def test_challenge_content_is_refused_loudly():
     """Um observador que traga conteudo do desafio nao pode ser ignorado em silencio."""
-    for signal in ("cf-turnstile-response-token", "selected-tile-3", "answer=a", "authorization: bearer"):
+    # Exemplos inequivocamente de CONTEUDO. `tile`/`click` saem da lista: classes
+    # reais como `rc-imageselect-tile` sao estrutura, nao resposta.
+    for signal in ("cf-turnstile-response-token", "selected-answer-3", "solution-row-2", "authorization: bearer"):
         with pytest.raises(UnsafeFingerprintInput):
             structural_fingerprint(_observation(dom_signals=(signal,)))
 

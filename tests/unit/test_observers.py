@@ -64,6 +64,21 @@ def test_the_observer_never_reads_challenge_text():
     assert "Select" not in " ".join(result.structure)
 
 
+def test_a_marker_inside_inline_javascript_is_not_dom():
+    """Falso positivo real: o texto do script nao e a pagina renderizada.
+
+    Um widget escrito dentro de `innerHTML` era detectado pelo texto do script e
+    nunca desaparecia, porque o codigo continua ali depois de o widget sair.
+    """
+    html = '<div id="box"></div><script>box.innerHTML = \'<div class="h-captcha"></div>\';</script>'
+    assert DOMObserver().observe(html).detected is False
+
+
+def test_a_marker_inside_a_style_block_is_not_dom():
+    html = '<style>.h-captcha { display: none }</style><div class="plain"></div>'
+    assert DOMObserver().observe(html).detected is False
+
+
 def test_the_dom_observer_has_no_ats_specific_selector():
     source = (DOMObserver.observe.__code__.co_consts)
     joined = " ".join(str(item) for item in source if isinstance(item, str)).casefold()

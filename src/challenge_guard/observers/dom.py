@@ -19,17 +19,42 @@ from .base import ObserverResult
 
 _TAG = re.compile(r"<[^>]+>")
 
+#: Blocos que nao descrevem a pagina renderizada.
+#:
+#: Sem isto, um marcador escrito DENTRO do JavaScript (`innerHTML = '<div
+#: class="h-captcha">'`) era lido como se fosse DOM: um falso positivo que nunca
+#: desaparecia, porque o texto do script permanece depois de o widget sair. O
+#: defeito apareceu num teste com browser real, em que o challenge era removido
+#: e a sessao continuava ACTIVE.
+_SCRIPT_OR_STYLE = re.compile(r"<(script|style)\b[^>]*>.*?</\1\s*>", re.IGNORECASE | re.DOTALL)
 
-def _structural_tokens(html: str) -> list[str]:
-    """Somente nomes de tag e atributos de classe/id/sitekey — nunca texto."""
-    tokens: list[str] = []
-    for tag in _TAG.findall(html or ""):
+
+def _tag_tokens(html: str) -> list[list[str]]:
+    """Tokens estruturais POR TAG: classes, ids e atributos anunciados.
+
+    Agrupados por tag porque o fingerprint precisa da estrutura DO ELEMENTO do
+    challenge, nao de um saco de tokens da pagina inteira. E a classe do proprio
+    widget que muda entre rodadas (`grid-4x4` -> `grid-5x5`); incluir classes de
+    toda a pagina produziria rodada nova a cada mudanca irrelevante.
+
+    Nada de texto: so atributos.
+    """
+    groups: list[list[str]] = []
+    for tag in _TAG.findall(_SCRIPT_OR_STYLE.sub(" ", html or "")):
         lowered = tag.casefold()
-        for attribute in ("class", "id", "data-sitekey", "data-hcaptcha-widget-id", "name"):
+        tokens: list[str] = []
+        for attribute in ("class", "id", "name"):
             match = re.search(rf'{attribute}\s*=\s*"([^"]*)"', lowered)
             if match:
                 tokens.extend(part for part in re.split(r"[\s]+", match.group(1)) if part)
-    return tokens
+        # Atributos cujo VALOR e sensivel entram apenas como PRESENCA. O sitekey
+        # identifica a conta do provedor: saber que o atributo existe e o fato
+        # estrutural; guardar o valor nao acrescenta nada e vaza.
+        for attribute in ("data-sitekey", "data-hcaptcha-widget-id"):
+            if re.search(rf'{attribute}\s*=', lowered):
+                tokens.append(attribute)
+        groups.append(tokens)
+    return groups
 
 
 class DOMObserver:
@@ -38,9 +63,10 @@ class DOMObserver:
     name = "dom"
 
     def observe(self, html: str) -> ObserverResult:
-        tokens = _structural_tokens(html)
-        if not tokens:
+        groups = [group for group in _tag_tokens(html) if group]
+        if not groups:
             return ObserverResult(source=self.name)
+        tokens = [token for group in groups for token in group]
 
         signals: list[ChallengeSignal] = []
         structure: list[str] = []
@@ -48,6 +74,11 @@ class DOMObserver:
             matched = [marker for marker in profile.dom_markers if any(marker in token for token in tokens)]
             if not matched:
                 continue
+            # A estrutura vem do ELEMENTO que casou, nao da pagina: e ela que
+            # muda entre rodadas do widget.
+            for group in groups:
+                if any(marker in token for marker in matched for token in group):
+                    structure.extend(group)
             # Um sinal por provider: varios marcadores casando sao corroboracao
             # da MESMA observacao, nao evidencias independentes. Emitir um sinal
             # por marcador inflaria a confianca sem nada ter sido observado a mais.
@@ -64,6 +95,7 @@ class DOMObserver:
         if not signals:
             return ObserverResult(source=self.name, structure=())
 
+        structure = sorted(set(structure))
         best = max(signals, key=lambda signal: signal.confidence)
         profile = profile_for(best.provider)
         challenge_type = profile.default_type if profile else ChallengeType.UNKNOWN

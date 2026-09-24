@@ -112,6 +112,9 @@ class ReasonToken(str, Enum):
     CHALLENGE_AFTER_WRITE_AWAITING_EVIDENCE = "challenge_after_write_awaiting_evidence"
     SUBMISSION_CONFIRMED_OVERRIDES_CHALLENGE = "submission_confirmed_overrides_challenge"
     CHALLENGE_AMBIGUOUS = "challenge_ambiguous"
+    #: A observacao humana expirou. NAO e rejeicao: nada foi recusado, apenas
+    #: nao terminou a tempo.
+    HUMAN_OBSERVATION_TIMEOUT = "human_observation_timeout"
 
 
 @dataclass(frozen=True)
