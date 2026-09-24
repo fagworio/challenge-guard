@@ -75,6 +75,13 @@ class ChallengeProviderProfile:
     #: e identificado — o que muda o tipo observado e, com ele, a decisao.
     frame_paths: tuple[str, ...] = ()
 
+    #: Caminhos do frame que significam "o desafio esta sendo APRESENTADO", nao
+    #: apenas "o selo esta na pagina". No reCAPTCHA, `anchor` e o selo e `bframe`
+    #: e o popup interativo com imagens. Sem esta distincao, presenca de selo e
+    #: desafio em andamento viram a mesma coisa — e a antiga deteccao do host
+    #: aproximava isso procurando a palavra "challenge" na URL.
+    challenge_frame_paths: tuple[str, ...] = ()
+
     #: Hosts que o widget precisa alcancar para funcionar. Sao REQUISITOS
     #: informados ao host, nao concessao de acesso.
     runtime_hosts: tuple[str, ...] = ()

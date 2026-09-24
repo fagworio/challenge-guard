@@ -93,7 +93,9 @@ RECAPTCHA_PROFILE = ChallengeProviderProfile(
     default_type=ChallengeType.CHECKBOX,
     frame_hosts=("www.google.com", "www.recaptcha.net", "recaptcha.net"),
     # Classico: `api2`. Fica como fallback (sem `frame_paths`) para nao roubar o
-    # caminho do Enterprise, que e mais especifico.
+    # caminho do Enterprise, que e mais especifico. `bframe` e o popup
+    # interativo; `anchor` e apenas o selo.
+    challenge_frame_paths=(r"^/recaptcha/api2/bframe",),
     runtime_hosts=(
         "www.google.com",
         "www.gstatic.com",
@@ -146,6 +148,7 @@ RECAPTCHA_ENTERPRISE_PROFILE = ChallengeProviderProfile(
     # fixture e no ADR — um nome de plataforma aqui e o acoplamento que o
     # desenho evita.
     frame_paths=(r"^/recaptcha/enterprise/",),
+    challenge_frame_paths=(r"^/recaptcha/enterprise/bframe",),
     runtime_hosts=(
         "www.google.com",
         "www.gstatic.com",

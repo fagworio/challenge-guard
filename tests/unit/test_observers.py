@@ -253,3 +253,43 @@ def test_a_token_in_the_frame_path_does_not_reach_the_structure():
         [FrameInfo(f"https://newassets.hcaptcha.com/captcha/v1/{opaque}/static/x.html", width=300, height=400)]
     )
     assert opaque not in " ".join(result.structure)
+
+
+def test_anchor_is_a_badge_and_bframe_is_a_presented_challenge():
+    """Distincao que o registry nao capturava.
+
+    No reCAPTCHA, `anchor` e o selo e `bframe` e o popup interativo. Tratar os
+    dois igual faria "selo na pagina" virar "desafio em andamento" — que era
+    exatamente o que a deteccao antiga do host aproximava procurando a palavra
+    "challenge" na URL.
+    """
+    observer = FrameObserver()
+    anchor = observer.observe(
+        [FrameInfo("https://www.recaptcha.net/recaptcha/enterprise/anchor", width=256, height=60)]
+    )
+    assert anchor.challenge_type is ChallengeType.INVISIBLE
+
+    bframe = observer.observe(
+        [FrameInfo("https://www.recaptcha.net/recaptcha/enterprise/bframe", width=400, height=580)]
+    )
+    assert bframe.provider is ChallengeProvider.RECAPTCHA_ENTERPRISE
+    assert bframe.challenge_type is ChallengeType.IMAGE_SELECTION
+    assert bframe.challenge_type.interactive is True
+    # O desafio apresentado pesa mais que o selo.
+    assert bframe.confidence > anchor.confidence
+
+
+def test_a_classic_bframe_is_also_a_presented_challenge():
+    result = FrameObserver().observe(
+        [FrameInfo("https://www.recaptcha.net/recaptcha/api2/bframe", width=400, height=580)]
+    )
+    assert result.provider is ChallengeProvider.RECAPTCHA
+    assert result.challenge_type is ChallengeType.IMAGE_SELECTION
+
+
+def test_a_provider_without_challenge_frames_keeps_its_default_type():
+    result = FrameObserver().observe(
+        [FrameInfo("https://newassets.hcaptcha.com/captcha/v1/x/static/hcaptcha-enclave.html", width=300, height=400)]
+    )
+    assert result.provider is ChallengeProvider.HCAPTCHA
+    assert result.challenge_type is ChallengeType.CHECKBOX

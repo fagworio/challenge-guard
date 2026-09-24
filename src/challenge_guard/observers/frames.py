@@ -74,6 +74,7 @@ class FrameObserver:
     def observe(self, frames: list[FrameInfo]) -> ObserverResult:
         signals: list[ChallengeSignal] = []
         structure: list[str] = []
+        challenge_type = ChallengeType.UNKNOWN
         for frame in frames:
             profile = profile_for_frame(frame.host, frame.path)
             if profile is None:
@@ -90,24 +91,33 @@ class FrameObserver:
             specific = bool(profile.frame_paths) and any(
                 re.match(pattern, frame.path) for pattern in profile.frame_paths
             )
+            presented = any(
+                re.match(pattern, frame.path) for pattern in profile.challenge_frame_paths
+            )
             signals.append(
                 ChallengeSignal(
                     kind=ChallengeSignalKind.CHALLENGE_VISIBLE,
                     source=self.name,
                     provider=profile.provider,
-                    confidence=0.85 if specific else 0.75,
+                    confidence=0.9 if presented else (0.85 if specific else 0.75),
                     detail=f"frame.{profile.provider.value}",
                 )
             )
+            if presented:
+                # Desafio APRESENTADO: e interativo, independentemente do tipo
+                # padrao do provider (que descreve o selo).
+                challenge_type = ChallengeType.IMAGE_SELECTION
         if not signals:
             return ObserverResult(source=self.name, structure=tuple(structure))
         best = max(signals, key=lambda signal: signal.confidence)
         profile = profile_for(best.provider)
+        if challenge_type is ChallengeType.UNKNOWN and profile is not None:
+            challenge_type = profile.default_type
         return ObserverResult(
             source=self.name,
             signals=tuple(signals),
             provider=best.provider,
-            challenge_type=profile.default_type if profile else ChallengeType.UNKNOWN,
+            challenge_type=challenge_type,
             structure=tuple(structure),
             confidence=best.confidence,
         )
