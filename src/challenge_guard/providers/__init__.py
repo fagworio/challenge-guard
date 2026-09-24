@@ -8,6 +8,7 @@ from .registry import (
     RECAPTCHA_ENTERPRISE_PROFILE,
     RECAPTCHA_PROFILE,
     profile_for,
+    profile_for_frame,
     profile_for_host,
     profiles,
 )
@@ -22,6 +23,7 @@ __all__ = [
     "RECAPTCHA_PROFILE",
     "ResponseMarker",
     "profile_for",
+    "profile_for_frame",
     "profile_for_host",
     "profiles",
 ]

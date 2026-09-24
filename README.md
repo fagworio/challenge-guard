@@ -74,7 +74,22 @@ Roadmap CG-001 .. CG-006 are implemented:
 | CG-013 | evidence redaction (allowlist, property-tested) | done |
 | CG-014 | Playwright adapter (optional extra, thin) | done |
 | CG-015 | human observation lifecycle | done |
+| CG-015A | passive provider reconnaissance, real fixtures, registry gate | done |
 | CG-016 .. CG-020 | visual boundary, handoff object, public API, release | pending |
+
+## Real-world fixtures
+
+`tools/passive_recon.py` observes a public board without clicking, filling or submitting, and writes
+a sanitised capture to `tests/fixtures/real_world/`. Those captures are replayed offline — fixture to
+observers to signals to policy — with no browser and no network, so real discovery becomes a
+regression test.
+
+| Provider | Captures | Verified |
+| --- | --- | --- |
+| hCaptcha | 1 | yes |
+| reCAPTCHA | 1 | yes |
+| reCAPTCHA Enterprise | 1 | yes |
+| generic (Turnstile) | 0 | **no — not claimed** |
 
 ## Precedence rules
 

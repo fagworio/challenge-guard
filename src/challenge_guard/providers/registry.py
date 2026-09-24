@@ -8,6 +8,8 @@ aqui — se um dia aparecer, a inteligencia anti-bot voltou a se acoplar ao boar
 
 from __future__ import annotations
 
+import re
+
 from ..models import ChallengeProvider, ChallengeType
 from ..requirements import ChallengeNetworkPurpose, ChallengeNetworkRequirement
 from ..signals import ChallengeSignalKind
@@ -90,7 +92,16 @@ RECAPTCHA_PROFILE = ChallengeProviderProfile(
     ),
     default_type=ChallengeType.CHECKBOX,
     frame_hosts=("www.google.com", "www.recaptcha.net", "recaptcha.net"),
-    runtime_hosts=("www.google.com", "www.gstatic.com", "www.recaptcha.net", "recaptcha.net"),
+    # Classico: `api2`. Fica como fallback (sem `frame_paths`) para nao roubar o
+    # caminho do Enterprise, que e mais especifico.
+    runtime_hosts=(
+        "www.google.com",
+        "www.gstatic.com",
+        "www.recaptcha.net",
+        "recaptcha.net",
+        "apis.google.com",
+        "content.googleapis.com",
+    ),
     widget_hosts=("www.gstatic.com",),
     # `data-sitekey` NAO entra: e usado por reCAPTCHA, hCaptcha e Turnstile, entao
     # nao discrimina nada. Ele continua na estrutura como presenca de atributo.
@@ -129,7 +140,20 @@ RECAPTCHA_ENTERPRISE_PROFILE = ChallengeProviderProfile(
     ),
     default_type=ChallengeType.INVISIBLE,
     frame_hosts=("www.google.com", "www.recaptcha.net", "recaptcha.net"),
-    runtime_hosts=("www.google.com", "www.gstatic.com", "www.recaptcha.net", "recaptcha.net"),
+    # Unico discriminador observado entre Enterprise e classico quando dividem o
+    # host. Dado real: `/recaptcha/enterprise/anchor` num board e
+    # `/recaptcha/api2/anchor` em outro. A procedencia (qual board) fica na
+    # fixture e no ADR — um nome de plataforma aqui e o acoplamento que o
+    # desenho evita.
+    frame_paths=(r"^/recaptcha/enterprise/",),
+    runtime_hosts=(
+        "www.google.com",
+        "www.gstatic.com",
+        "www.recaptcha.net",
+        "recaptcha.net",
+        "apis.google.com",
+        "content.googleapis.com",
+    ),
     # Sem marcadores de DOM DE PROPOSITO. O Enterprise e invisivel: normalmente
     # nao renderiza widget. Listar `g-recaptcha` aqui faria todo formulario
     # reCAPTCHA v2 disparar dois sinais — dois "providers" para uma unica
@@ -205,6 +229,33 @@ def profiles() -> tuple[ChallengeProviderProfile, ...]:
 
 def profile_for(provider: ChallengeProvider) -> ChallengeProviderProfile | None:
     return _BY_PROVIDER.get(provider)
+
+
+def profile_for_frame(host: str, path: str = "") -> ChallengeProviderProfile | None:
+    """Perfil que cobre host E caminho do frame.
+
+    Caminho especifico vence: e o que separa dois provedores que compartilham o
+    mesmo host. Sem caminho (ou sem match especifico), cai no host.
+    """
+    normalized = (host or "").casefold().strip()
+    if not normalized:
+        return None
+    if path:
+        for profile in PROFILES:
+            if not profile.frame_paths:
+                continue
+            if not _host_matches(profile.frame_hosts, normalized):
+                continue
+            if any(re.match(pattern, path) for pattern in profile.frame_paths):
+                return profile
+    return profile_for_host(normalized)
+
+
+def _host_matches(candidates: tuple[str, ...], host: str) -> bool:
+    for candidate in candidates:
+        if host == candidate or host.endswith("." + candidate.lstrip("*.")):
+            return True
+    return False
 
 
 def profile_for_host(host: str) -> ChallengeProviderProfile | None:

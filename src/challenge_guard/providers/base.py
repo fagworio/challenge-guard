@@ -68,6 +68,13 @@ class ChallengeProviderProfile:
     #: Hosts de iframe do desafio (comparados por host, nao por URL inteira).
     frame_hosts: tuple[str, ...] = ()
 
+    #: Padroes de CAMINHO do frame que distinguem provedores que dividem o mesmo
+    #: host. Dado real: o mesmo `www.recaptcha.net` serve
+    #: `/recaptcha/enterprise/anchor` (Enterprise) e `/recaptcha/api2/anchor`
+    #: (classico). Sem isto, o primeiro perfil da lista vence e Enterprise nunca
+    #: e identificado — o que muda o tipo observado e, com ele, a decisao.
+    frame_paths: tuple[str, ...] = ()
+
     #: Hosts que o widget precisa alcancar para funcionar. Sao REQUISITOS
     #: informados ao host, nao concessao de acesso.
     runtime_hosts: tuple[str, ...] = ()

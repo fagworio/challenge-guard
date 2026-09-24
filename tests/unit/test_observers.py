@@ -229,3 +229,27 @@ def test_merging_nothing_yields_nothing():
     merged = merge([DOMObserver().observe(""), FrameObserver().observe([])])
     assert merged.detected is False
     assert merged.provider is ChallengeProvider.UNKNOWN
+
+
+def test_frame_path_shape_normalises_opaque_segments():
+    """Achado real: o token `se` do hCaptcha viaja no CAMINHO do frame.
+
+    Registrar o caminho literal vazaria o identificador da conta e faria o
+    fingerprint inventar rodada nova quando o provedor troca o id.
+    """
+    from challenge_guard.observers.frames import path_shape
+
+    assert path_shape("/captcha/v1/633567452af282a792b41ae854a73508f80017fa/static/x.html") == (
+        "/captcha/v1/:id/static/x.html"
+    )
+    # Caminhos com palavras continuam intactos: e o que discrimina Enterprise.
+    assert path_shape("/recaptcha/enterprise/anchor") == "/recaptcha/enterprise/anchor"
+    assert path_shape("/recaptcha/api2/anchor") == "/recaptcha/api2/anchor"
+
+
+def test_a_token_in_the_frame_path_does_not_reach_the_structure():
+    opaque = "633567452af282a792b41ae854a73508f80017fa"
+    result = FrameObserver().observe(
+        [FrameInfo(f"https://newassets.hcaptcha.com/captcha/v1/{opaque}/static/x.html", width=300, height=400)]
+    )
+    assert opaque not in " ".join(result.structure)

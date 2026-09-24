@@ -1,0 +1,174 @@
+{
+  "provider": "hcaptcha",
+  "observation": "passive_public_board",
+  "provenance": {
+    "board": "lever",
+    "recorded_by": "tools/passive_recon.py"
+  },
+  "challenge_visible": true,
+  "detected": true,
+  "phase": "pre_submit",
+  "decision": "needs_human",
+  "reason_token": "challenge_detected_pre_submit",
+  "confidence": 0.8,
+  "signals": {
+    "dom": [
+      "HCAPTCHA_CONTAINER"
+    ],
+    "frames": [],
+    "network": [
+      "CHALLENGE_TRAFFIC"
+    ]
+  },
+  "dom_structure": "<html><head><meta><meta><meta name=\"viewport\"><title><meta name=\"twitter:card\" value=\"REDACTED\"><meta name=\"twitter:title\"><meta name=\"twitter:description\"><meta name=\"twitter:label1\" value=\"REDACTED\"><meta name=\"twitter:data1\" value=\"REDACTED\"><meta name=\"twitter:label2\" value=\"REDACTED\"><meta name=\"twitter:data2\" value=\"REDACTED\"><meta name=\"twitter:image\"><meta><meta><meta><meta><meta><meta><body class=\"application header-compact\"><div class=\"cc-revoke cc-bottom cc-animate\"><div class=\"cc-window cc-banner cc-type-opt-in cc-theme-block cc-bottom\" role=\"dialog\"><div class=\"momentum-body\"><div class=\"message message-inverse flex-column\"><div class=\"icon\"><div class=\"message-buttons cc-desktop\"><button class=\"button button-sm cc-btn cc-deny\" href=\"REDACTED\"><button class=\"button button-sm button-primary cc-btn cc-allow\" href=\"REDACTED\"><h4 class=\"text-white\"><p><b><div class=\"self-end cc-mobile m1\"><button class=\"button button-sm cc-btn cc-deny\" href=\"REDACTED\"><button class=\"button button-sm button-primary cc-btn cc-allow\" href=\"REDACTED\"><div class=\"page application\"><div class=\"main-header page-full-width section-wrapper\"><div class=\"main-header-content page-centered narrow-section page-full-width\"><a class=\"main-header-logo\" href=\"REDACTED\"><img src=\"REDACTED\"><div class=\"content-wrapper application-page\"><div class=\"content\"><div class=\"section-wrapper accent-section small-accent page-full-width\"><div class=\"section page-centered posting-header\"><h2><div class=\"posting-categories\"><div class=\"sort-by-time posting-category medium-category-label width-full capitalize-labels location\" href=\"REDACTED\"><span id=\"secondary-additional-location-Stockholm\"><div class=\"sort-by-team posting-category medium-category-label capitalize-labels department\" href=\"REDACTED\"><div class=\"sort-by-commitment posting-category medium-category-label capitalize-labels commitment\" href=\"REDACTED\"><div class=\"sort-by-time posting-category medium-category-label capitalize-labels workplaceTypes\" href=\"REDACTED\"><div class=\"section-wrapper page-full-width\"><form id=\"application-form\" type=\"multipart/form-data\"><div class=\"section page-centered application-form\"><h4><ul><li class=\"application-question\"><div class=\"application-label\"><div class=\"application-field\"><div class=\"application-dropdown\"><select class=\"opportunity-location\" name=\"opportunityLocationId\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><li class=\"application-question resume\"><label><div class=\"application-label\"><span class=\"required\"><div class=\"application-field\"><a class=\"postings-btn template-btn-utility visible-resume-upload\" href=\"REDACTED\"><svg class=\"icon icon-paperclip\"><path id=\"Vector\"><span class=\"filename\"><span class=\"default-label\"><input class=\"application-file-input invisible-resume-upload\" id=\"resume-upload-input\" name=\"resume\" type=\"file\"><span class=\"resume-upload-failure\"><div class=\"resume-upload-label\"><span class=\"resume-upload-working\"><div class=\"loading-indicator\"><div class=\"resume-upload-label\"><span class=\"resume-upload-success\"><div class=\"loading-indicator completed\"><svg class=\"icon icon-check\"><path><div class=\"resume-upload-label\"><span class=\"resume-upload-oversize\"><p class=\"error-message\"><b><li class=\"application-question\"><label><div class=\"application-label\"><span class=\"required\"><div class=\"application-field\"><input name=\"name\" type=\"text\"><li class=\"application-question\"><div class=\"application-label multiple-select\"><div class=\"application-field\"><ul id=\"candidatePronounsCheckboxes\"><div class=\"column-wrapper\"><div class=\"table-row\"><li class=\"column\"><label><input class=\"standardPronounsOption\" name=\"pronouns\" type=\"checkbox\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li class=\"column\"><label><input class=\"standardPronounsOption\" name=\"pronouns\" type=\"checkbox\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li class=\"column\"><label><input class=\"standardPronounsOption\" name=\"pronouns\" type=\"checkbox\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><div class=\"table-row\"><li class=\"column\"><label><input class=\"standardPronounsOption\" name=\"pronouns\" type=\"checkbox\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li class=\"column\"><label><input class=\"standardPronounsOption\" name=\"pronouns\" type=\"checkbox\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li class=\"column\"><label><input class=\"standardPronounsOption\" name=\"pronouns\" type=\"checkbox\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><div class=\"table-row\"><li class=\"column\"><label><input class=\"standardPronounsOption\" name=\"pronouns\" type=\"checkbox\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li class=\"column\"><label><input class=\"standardPronounsOption\" name=\"pronouns\" type=\"checkbox\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li class=\"column\"><label><input class=\"standardPronounsOption\" name=\"pronouns\" type=\"checkbox\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><hr><li><label><input id=\"useNameOnlyPronounsOption\" name=\"pronouns\" type=\"checkbox\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><hr><li><label><input id=\"customPronounsOption\" type=\"checkbox\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><input class=\"card-field-input\" id=\"customPronounsTextField\" name=\"pronouns\" type=\"text\"><p class=\"description\"><li class=\"application-question\"><label><div class=\"application-label\"><span class=\"required\"><div class=\"application-field\"><input name=\"email\" type=\"email\"><li class=\"application-question\"><label><div class=\"application-label\"><span class=\"required\"><div class=\"application-field\"><input name=\"phone\" type=\"text\"><li class=\"application-question\"><label><div class=\"application-label\"><span class=\"required\"><div class=\"application-field\"><input class=\"location-input\" id=\"location-input\" name=\"location\" type=\"text\"><input id=\"selected-location\" name=\"selectedLocation\" type=\"hidden\"><div class=\"momentum-body flex flex-column items-start width-full height-auto bg-gray-800 text-gray-200 rounded dropdown-container\"><div class=\"dropdown-results width-full cursor-pointer\"><div class=\"dropdown-no-results width-full break-word py1 px2 pointer-events-none\"><div class=\"dropdown-loading-results width-full break-word height-full py1 px2 pointer-events-none\"><div class=\"theme-inverse items-center\"><svg class=\"icon icon-loading-spinner animation-rotate-infinite animation-linear animation-duration-500ms\"><path><path><span><li class=\"application-question\"><label><div class=\"application-label\"><span class=\"required\"><div class=\"application-field\"><input name=\"org\" type=\"text\"><div class=\"section page-centered application-form\"><h4><ul><li class=\"application-question\"><label><div class=\"application-label\"><div class=\"application-field\"><input name=\"urls[LinkedIn]\" type=\"text\"><li class=\"application-question\"><label><div class=\"application-label\"><div class=\"application-field\"><input name=\"urls[GitHub]\" type=\"text\"><li class=\"application-question\"><label><div class=\"application-label\"><div class=\"application-field\"><input name=\"urls[Portfolio]\" type=\"text\"><li class=\"application-question\"><label><div class=\"application-label\"><div class=\"application-field\"><input name=\"urls[Other]\" type=\"text\"><div class=\"section page-centered application-form\"><h4><input name=\"cards[92a51f92-d683-4f7b-be57-e25376f60abe][baseTemplate]\" type=\"hidden\" value=\"REDACTED\"><ul><li class=\"application-question custom-question\"><div><div class=\"application-label full-width multiple-select\"><div class=\"text\"><span class=\"required\"><div class=\"application-field full-width required-field\"><ul><li><label><input name=\"cards[92a51f92-d683-4f7b-be57-e25376f60abe][field0]\" type=\"checkbox\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"cards[92a51f92-d683-4f7b-be57-e25376f60abe][field0]\" type=\"checkbox\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"cards[92a51f92-d683-4f7b-be57-e25376f60abe][field0]\" type=\"checkbox\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><div class=\"section page-centered application-form\"><hr><h4><div class=\"application-question\"><label><div class=\"application-label\"><div class=\"application-field\"><div class=\"application-dropdown\"><select class=\"candidate-location\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><option value=\"REDACTED\"><div class=\"section page-centered application-form hidden\" id=\"countrySurvey_US\"><hr><h4><p><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][baseTemplate]\" type=\"hidden\" value=\"REDACTED\"><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][surveyId]\" type=\"hidden\" value=\"REDACTED\"><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][candidateSelectedLocation]\" type=\"hidden\" value=\"REDACTED\"><ul><li class=\"application-question\"><div class=\"application-label full-width multiple-choice\"><div class=\"text\"><div class=\"application-field full-width\"><ul><li><label><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li class=\"application-question\"><div class=\"application-label full-width multiple-choice\"><div class=\"text\"><div class=\"application-field full-width\"><ul><li><label><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li class=\"application-question\"><div class=\"application-label full-width multiple-choice\"><div class=\"text\"><div class=\"application-field full-width\"><ul><li><label><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][responses][field2]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][responses][field2]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[cbf1b3c9-4157-4ddd-a66e-41dae0d8badb][responses][field2]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><div class=\"section page-centered application-form hidden\" id=\"countrySurvey_AL_DZ_AS_AD_AO_AI_AQ_AG_AR_AM_AW_AU_AT_BS_BB_BE_BZ_BJ_BM_BO_BA_BW_BR_BV_IO_BN_BG_BI_KH_CM_CA_CV_KY_CF_TD_CL_CN_CX_CC_CO_KM_CG_CD_CK_CR_HR_CU_CW_CY_CZ_DK_DJ_DM_DO_EC_SV_GQ_ER_EE_SZ_ET_FK_FO_FJ_FI_FR_GF_PF_TF_GA_GM_GE_DE_GH_GI_GR_GL_GD_GP_GU_GT_GG_GN_GW_GY_HT_HM_HN_HK_HU_IS_IN_ID_IE_IM_IT_CI_JM_JP_JE_KE_KI_LA_LV_LS_LR_LY_LI_LT_LU_MO_MK_MG_MW_MY_MV_ML_MT_MH_MQ_MR_MU_YT_MX_FM_MD_MC_MN_ME_MS_MM_NA_NR_NP_NL_NC_NZ_NI_NE_NG_NU_NF_MP_NO_PW_PA_PG_PY_PE_PH_PN_PL_PT_PR_RO_RW_RE_BL_SH_KN_LC_MF_PM_VC_WS_SM_ST_SN_SC_SL_SG_SX_SK_SI_SB_SO_ZA_GS_KR_ES_LK_SD_SS_SR_SE_CH_TW_TZ_TH_TL_TG_TK_TO_TT_TR_TM_TC_TV_UG_UA_UM_UY_VU_VE_VN_VG_VI_WF_EH_ZM_ZW_AX\"><hr><h4><p><input name=\"surveysResponses[380b7dba-8003-486d-b65d-28bf53a52415][baseTemplate]\" type=\"hidden\" value=\"REDACTED\"><input name=\"surveysResponses[380b7dba-8003-486d-b65d-28bf53a52415][surveyId]\" type=\"hidden\" value=\"REDACTED\"><input name=\"surveysResponses[380b7dba-8003-486d-b65d-28bf53a52415][candidateSelectedLocation]\" type=\"hidden\" value=\"REDACTED\"><ul><li class=\"application-question\"><div class=\"application-label full-width multiple-choice\"><div class=\"text\"><div class=\"application-field full-width\"><ul><li><label><input name=\"surveysResponses[380b7dba-8003-486d-b65d-28bf53a52415][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[380b7dba-8003-486d-b65d-28bf53a52415][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[380b7dba-8003-486d-b65d-28bf53a52415][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[380b7dba-8003-486d-b65d-28bf53a52415][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[380b7dba-8003-486d-b65d-28bf53a52415][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><div class=\"section page-centered application-form hidden\" id=\"countrySurvey_AF_AZ_BH_BD_BY_BT_BQ_BF_EG_VA_IR_IQ_IL_KZ_KW_KG_LB_MA_MZ_KP_PK_OM_PS_RU_SA_RS_SY_TJ_TN_YE\"><hr><h4><p><input name=\"surveysResponses[414f4bab-5e29-4f62-ba71-2e6d2442df59][baseTemplate]\" type=\"hidden\" value=\"REDACTED\"><input name=\"surveysResponses[414f4bab-5e29-4f62-ba71-2e6d2442df59][surveyId]\" type=\"hidden\" value=\"REDACTED\"><input name=\"surveysResponses[414f4bab-5e29-4f62-ba71-2e6d2442df59][candidateSelectedLocation]\" type=\"hidden\" value=\"REDACTED\"><ul><li class=\"application-question\"><div class=\"application-label full-width multiple-choice\"><div class=\"text\"><div class=\"application-field full-width\"><ul><li><label><input name=\"surveysResponses[414f4bab-5e29-4f62-ba71-2e6d2442df59][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[414f4bab-5e29-4f62-ba71-2e6d2442df59][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[414f4bab-5e29-4f62-ba71-2e6d2442df59][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><div class=\"section page-centered application-form hidden\" id=\"countrySurvey_GB\"><hr><h4><p><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][baseTemplate]\" type=\"hidden\" value=\"REDACTED\"><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][surveyId]\" type=\"hidden\" value=\"REDACTED\"><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][candidateSelectedLocation]\" type=\"hidden\" value=\"REDACTED\"><ul><li class=\"application-question\"><div class=\"application-label full-width multiple-choice\"><div class=\"text\"><div class=\"application-field full-width\"><ul><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field0]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li class=\"application-question\"><div class=\"application-label full-width multiple-choice\"><div class=\"text\"><div class=\"application-field full-width\"><ul><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><li><label><input name=\"surveysResponses[46c5c4bd-a2d2-43e8-85a4-eefa9d51dff2][responses][field1]\" type=\"radio\" value=\"REDACTED\"><span class=\"application-answer-alternative\"><input name=\"accountId\" type=\"hidden\" value=\"REDACTED\"><input name=\"linkedInData\" type=\"hidden\"><input name=\"origin\" type=\"hidden\"><input name=\"referer\" type=\"hidden\"><input id=\"applicant-timezone\" name=\"timezone\" type=\"hidden\" value=\"REDACTED\"><input name=\"socialReferralKey\" type=\"hidden\"><input name=\"socialSource\" type=\"hidden\"><input name=\"resumeStorageId\" type=\"hidden\" value=\"REDACTED\"><input id=\"hcaptchaResponseInput\" name=\"h-captcha-response\" type=\"hidden\" value=\"REDACTED\"><button class=\"hidden\" id=\"hcaptchaSubmitBtn\" type=\"submit\"><input name=\"source\" type=\"hidden\"><div class=\"section page-centered application-form\"><hr><ul><li class=\"application-question\"><div class=\"application-field full-width\"><p><a class=\"text-gray-700\" href=\"REDACTED\"><ul><li><label><span class=\"\"><input name=\"consent[marketing]\" type=\"hidden\" value=\"REDACTED\"><input name=\"consent[marketing]\" type=\"checkbox\" value=\"REDACTED\"><div class=\"h-captcha\" id=\"h-captcha\" data-sitekey=\"REDACTED\"><iframe title=\"REDACTED\" src=\"REDACTED\"><iframe title=\"REDACTED\" src=\"REDACTED\"><div class=\"section page-centered application-form last-section-apply\"><button class=\"postings-btn template-btn-submit hex-color\" id=\"btn-submit\" type=\"button\" href=\"REDACTED\"><div class=\"main-footer page-full-width\"><div class=\"main-footer-text\"><p><a href=\"REDACTED\"><div class=\"mt1\"><p><a class=\"image-link\" href=\"REDACTED\"><span><img class=\"footer-logo\" src=\"REDACTED\"><iframe>",
+  "dom_samples": [
+    "<div class=\"h-captcha\" id=\"h-captcha\" data-sitekey=\"REDACTED\"><iframe title=\"REDACTED\" src=\"REDACTED\"><iframe title=\"REDACTED\" src=\"REDACTED\">",
+    "<div class=\"h-captcha\" id=\"h-captcha\" data-sitekey=\"REDACTED\"><iframe title=\"REDACTED\" src=\"REDACTED\"><iframe title=\"REDACTED\" src=\"REDACTED\">",
+    "<iframe title=\"REDACTED\" src=\"REDACTED\">"
+  ],
+  "frames": [
+    {
+      "host": "newassets.hcaptcha.com",
+      "path": "/captcha/v1/:id/static/hcaptcha-enclave.html",
+      "visible": false,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "host": "newassets.hcaptcha.com",
+      "path": "/captcha/v1/:id/static/hcaptcha-enclave.html",
+      "visible": false,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "host": "",
+      "path": "/",
+      "visible": false,
+      "width": 1,
+      "height": 1
+    }
+  ],
+  "network": [
+    {
+      "origin": "https://js.hcaptcha.com",
+      "path_hash": "fd26a6463c2423f8",
+      "method": "GET",
+      "resource_type": "script",
+      "status": null
+    },
+    {
+      "origin": "https://newassets.hcaptcha.com",
+      "path_hash": "dccbf2778c2fe035",
+      "method": "GET",
+      "resource_type": "document",
+      "status": null
+    },
+    {
+      "origin": "https://newassets.hcaptcha.com",
+      "path_hash": "dccbf2778c2fe035",
+      "method": "GET",
+      "resource_type": "document",
+      "status": null
+    },
+    {
+      "origin": "https://js.hcaptcha.com",
+      "path_hash": "a8475e43f89a5839",
+      "method": "GET",
+      "resource_type": "script",
+      "status": null
+    },
+    {
+      "origin": "https://js.hcaptcha.com",
+      "path_hash": "a8475e43f89a5839",
+      "method": "GET",
+      "resource_type": "script",
+      "status": null
+    },
+    {
+      "origin": "https://62764c699de4.w.hcaptcha.com",
+      "path_hash": "8175e357eb9f609f",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": null
+    },
+    {
+      "origin": "https://8117f5ccd623.w.hcaptcha.com",
+      "path_hash": "8175e357eb9f609f",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": null
+    },
+    {
+      "origin": "https://newassets.hcaptcha.com",
+      "path_hash": "140f171776307959",
+      "method": "GET",
+      "resource_type": "document",
+      "status": null
+    },
+    {
+      "origin": "https://newassets.hcaptcha.com",
+      "path_hash": "140f171776307959",
+      "method": "GET",
+      "resource_type": "document",
+      "status": null
+    },
+    {
+      "origin": "https://newassets.hcaptcha.com",
+      "path_hash": "140f171776307959",
+      "method": "GET",
+      "resource_type": "document",
+      "status": null
+    },
+    {
+      "origin": "https://newassets.hcaptcha.com",
+      "path_hash": "140f171776307959",
+      "method": "GET",
+      "resource_type": "document",
+      "status": null
+    },
+    {
+      "origin": "https://7b1e8bdaab8d.w.hcaptcha.com",
+      "path_hash": "8175e357eb9f609f",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": null
+    },
+    {
+      "origin": "https://api.hcaptcha.com",
+      "path_hash": "7fddb3b82304efd2",
+      "method": "POST",
+      "resource_type": "xhr",
+      "status": null
+    },
+    {
+      "origin": "https://31c587ff890a.w.hcaptcha.com",
+      "path_hash": "8175e357eb9f609f",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": null
+    },
+    {
+      "origin": "https://newassets.hcaptcha.com",
+      "path_hash": "dedbf74640f01005",
+      "method": "GET",
+      "resource_type": "script",
+      "status": null
+    },
+    {
+      "origin": "https://api.hcaptcha.com",
+      "path_hash": "7fddb3b82304efd2",
+      "method": "POST",
+      "resource_type": "xhr",
+      "status": null
+    },
+    {
+      "origin": "https://newassets.hcaptcha.com",
+      "path_hash": "dedbf74640f01005",
+      "method": "GET",
+      "resource_type": "script",
+      "status": null
+    }
+  ],
+  "pii_present": false
+}

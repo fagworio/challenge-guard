@@ -1,0 +1,102 @@
+{
+  "provider": "recaptcha",
+  "observation": "passive_public_board",
+  "provenance": {
+    "board": "ashby",
+    "recorded_by": "tools/passive_recon.py"
+  },
+  "challenge_visible": true,
+  "detected": true,
+  "phase": "pre_submit",
+  "decision": "needs_human",
+  "reason_token": "challenge_detected_pre_submit",
+  "confidence": 0.8,
+  "signals": {
+    "dom": [
+      "RECAPTCHA_CONTAINER"
+    ],
+    "frames": [],
+    "network": [
+      "CHALLENGE_TRAFFIC"
+    ]
+  },
+  "dom_structure": "<html><head><meta><meta><meta><meta name=\"viewport\"><meta name=\"theme-color\"><meta id=\"csp-nonce\" name=\"csp-nonce\"><link type=\"image/svg+xml\" href=\"REDACTED\"><link type=\"image/png\" href=\"REDACTED\"><link href=\"REDACTED\"><title><meta name=\"title\"><meta name=\"description\"><meta name=\"twitter:card\"><meta><meta><meta><meta><meta name=\"twitter:title\"><meta name=\"twitter:description\"><link href=\"REDACTED\"><link type=\"text/css\" href=\"REDACTED\"><link id=\"vite-preload\" href=\"REDACTED\"><link type=\"font/woff2\" href=\"REDACTED\"><link type=\"font/woff2\" href=\"REDACTED\"><link type=\"font/woff2\" href=\"REDACTED\"><link href=\"REDACTED\"><link href=\"REDACTED\"><meta name=\"robots\"><body><noscript><div id=\"root\"><div class=\"_navRoot_5bhg5_28 ashby-job-posting-header\"><ul class=\"_navContainer_5bhg5_35\"><li><a class=\"_navLogoLink_5bhg5_95\" href=\"REDACTED\"><img class=\"_navLogoWordmarkImage_5bhg5_104\" src=\"REDACTED\"><li class=\"\"><a class=\"_link_5bhg5_124 ashby-job-board-back-to-all-jobs-button\" href=\"REDACTED\"><svg><path><li><div class=\"_container_dea4p_28\"><div class=\"_titles_dea4p_33\"><h1 class=\"_title_dea4p_33 _large_dea4p_66 ashby-job-posting-heading\"><div class=\"_content_dea4p_70 _details_5yu8i_417\"><div class=\"_left_5yu8i_421 ashby-job-posting-left-pane  _container_f7cvd_28\"><div class=\"_section_f7cvd_36\"><h2 class=\"_heading_f7cvd_52\"><p><div class=\"_section_f7cvd_36\"><h2 class=\"_heading_f7cvd_52\"><p><div class=\"_section_f7cvd_36\"><h2 class=\"_heading_f7cvd_52\"><p><div class=\"_section_f7cvd_36\"><h2 class=\"_heading_f7cvd_52\"><p><div class=\"ashby-job-posting-right-pane\"><nav class=\"_tabs_5yu8i_29\" role=\"tablist\"><a class=\"_tab_5yu8i_29\" id=\"job-overview\" role=\"tab\" href=\"REDACTED\"><span class=\"ashby-job-posting-right-pane-overview-tab\"><a class=\"_tab_5yu8i_29 _active_5yu8i_56\" id=\"job-application-form\" role=\"tab\" href=\"REDACTED\"><span class=\"ashby-job-posting-right-pane-application-tab\"><span class=\"_slider_5yu8i_65 ashby-job-posting-right-pane-tab-slider\"><div id=\"form\" role=\"tabpanel\"><div class=\"_autofillPane_5yu8i_448 ashby-application-form-autofill-pane  _container_f7cvd_28\"><div class=\"_root_xd2v0_1 ashby-application-form-autofill-input-root\" role=\"presentation\"><input type=\"file\"><div class=\"_base_xd2v0_31 ashby-application-form-autofill-input-base-layer\"><div class=\"_content_xd2v0_36\"><div class=\"_header_xd2v0_43\"><div class=\"_iconContainer_xd2v0_50\"><svg class=\"_icon_xd2v0_50 ashby-application-form-autofill-input-icon\"><path><h3 class=\"_title_xd2v0_64 ashby-application-form-autofill-input-title\"><p class=\"_description_xd2v0_76 ashby-application-form-autofill-input-description\"><div class=\"_cta_xd2v0_88\"><button class=\"_button_zyh3g_28 _secondary_zyh3g_115    _ctaButton_xd2v0_94\"><div class=\"_drag_xd2v0_120 ashby-application-form-autofill-input-drag-layer\"><svg><path><span><div class=\"_pending_xd2v0_121 ashby-application-form-autofill-input-pending-layer\"><span class=\"_spinner_8ul1h_9 _spinner-size-md_8ul1h_26 _spinner-speed-normal_8ul1h_42\" role=\"progressbar\"><span><div class=\"_jobPostingForm_5yu8i_402 ashby-application-form-container  _container_f7cvd_28\"><div class=\"_section_5yu8i_86 ashby-application-form-section-container\"><div class=\"_sectionHeader_5yu8i_93 ashby-application-form-section-header\"><h2 class=\"_title_5yu8i_99 ashby-application-form-section-header-title\"><div class=\"_fieldEntry_1e3gg_28 ashby-application-form-field-entry\" id=\"69bef76e-4ab4-4541-8e0d-595047d13795__systemfield_name\"><label class=\"_heading_f7cvd_52 _required_f7cvd_91 _label_1e3gg_42 ashby-application-form-question-title\"><div><input class=\"_input_80epu_28 _input_1e3gg_32 ashby-application-form-input-text\" id=\"_systemfield_name\" name=\"_systemfield_name\" type=\"text\" value=\"REDACTED\"><div class=\"_fieldEntry_1e3gg_28 ashby-application-form-field-entry\" id=\"69bef76e-4ab4-4541-8e0d-595047d13795__systemfield_email\"><label class=\"_heading_f7cvd_52 _required_f7cvd_91 _label_1e3gg_42 ashby-application-form-question-title\"><div><input class=\"_input_80epu_28 _input_1e3gg_32 ashby-application-form-input-text\" id=\"_systemfield_email\" name=\"_systemfield_email\" type=\"email\" value=\"REDACTED\"><div class=\"_fieldEntry_1e3gg_28 ashby-application-form-field-entry\" id=\"69bef76e-4ab4-4541-8e0d-595047d13795__systemfield_resume\"><label class=\"_heading_f7cvd_52 _required_f7cvd_91 _label_1e3gg_42 ashby-application-form-question-title\"><div class=\"_container_10xk4_70  ashby-application-form-input-file\" role=\"presentation\"><input id=\"_systemfield_resume\" type=\"file\"><div class=\"_instructions_10xk4_33 ashby-application-form-input-file-dropzone\"><button class=\"_button_zyh3g_28 _secondary_zyh3g_115    _button_10xk4_106 ashby-application-form-input-file-dropzone-upload\"><svg><path><span><span><p class=\"_dragInstructions_10xk4_28 ashby-application-form-input-file-dropzone-instructions\"><div class=\"_fieldEntry_1e3gg_28 ashby-application-form-field-entry\" id=\"69bef76e-4ab4-4541-8e0d-595047d13795_1ed7df4b-e6d4-484e-92c3-4a5f5e07fd0c\"><label class=\"_heading_f7cvd_52 _required_f7cvd_91 _label_1e3gg_42 ashby-application-form-question-title\"><div class=\"_description_1e3gg_48 ashby-application-form-question-description\"><p><textarea class=\"_input_zf0lr_28 _input_1e3gg_32  ashby-application-form-input-textarea\" id=\"1ed7df4b-e6d4-484e-92c3-4a5f5e07fd0c\" name=\"1ed7df4b-e6d4-484e-92c3-4a5f5e07fd0c\"><div class=\"_section_5yu8i_86 ashby-application-form-section-container\"><div class=\"_sectionHeader_5yu8i_93 ashby-application-form-section-header\"><h2 class=\"_title_5yu8i_99 ashby-application-form-section-header-title\"><div class=\"_fieldEntry_1e3gg_28 ashby-application-form-field-entry\" id=\"69bef76e-4ab4-4541-8e0d-595047d13795_1c843a13-4fe3-43df-afcf-37a69d88591b\"><label class=\"_heading_f7cvd_52 _required_f7cvd_91 _label_1e3gg_42 ashby-application-form-question-title\"><div class=\"_description_1e3gg_48 ashby-application-form-question-description\"><p><div><input class=\"_input_80epu_28 _input_1e3gg_32 ashby-application-form-input-text\" id=\"1c843a13-4fe3-43df-afcf-37a69d88591b\" name=\"1c843a13-4fe3-43df-afcf-37a69d88591b\" type=\"text\" value=\"REDACTED\"><div class=\"_fieldEntry_1e3gg_28 ashby-application-form-field-entry\" id=\"69bef76e-4ab4-4541-8e0d-595047d13795_ca5c9d78-ec13-4bf2-86b8-bce6ff32e45e\"><label class=\"_heading_f7cvd_52  _label_1e3gg_42 ashby-application-form-question-title\"><div class=\"_description_1e3gg_48 ashby-application-form-question-description\"><p><div><input class=\"_input_80epu_28 _input_1e3gg_32 ashby-application-form-input-text\" id=\"ca5c9d78-ec13-4bf2-86b8-bce6ff32e45e\" name=\"ca5c9d78-ec13-4bf2-86b8-bce6ff32e45e\" type=\"text\" value=\"REDACTED\"><div class=\"_fieldEntry_1e3gg_28 ashby-application-form-field-entry\" id=\"69bef76e-4ab4-4541-8e0d-595047d13795_2165840e-d858-4ff0-ad26-bd48832fe3a7\"><label class=\"_heading_f7cvd_52  _label_1e3gg_42 ashby-application-form-question-title\"><div class=\"_description_1e3gg_48 ashby-application-form-question-description\"><p><div><input class=\"_input_80epu_28 _input_1e3gg_32 ashby-application-form-input-text\" id=\"2165840e-d858-4ff0-ad26-bd48832fe3a7\" name=\"2165840e-d858-4ff0-ad26-bd48832fe3a7\" type=\"text\" value=\"REDACTED\"><div class=\"_section_5yu8i_86 ashby-application-form-section-container\"><div class=\"_sectionHeader_5yu8i_93 ashby-application-form-section-header\"><h2 class=\"_title_5yu8i_99 ashby-application-form-section-header-title\"><div class=\"_fieldEntry_1e3gg_28 ashby-application-form-field-entry\" id=\"69bef76e-4ab4-4541-8e0d-595047d13795_9fd0020d-14f0-47f3-b076-f31e5eaa8295\"><label class=\"_heading_f7cvd_52 _required_f7cvd_91 _label_1e3gg_42 ashby-application-form-question-title\"><div class=\"_container_1svni_28 _yesno_1e3gg_148  ashby-application-form-input-yesno\"><button class=\"_container_pjyt6_1 _option_1svni_32  ashby-application-form-input-yesno-option\"><button class=\"_container_pjyt6_1 _option_1svni_32  ashby-application-form-input-yesno-option\"><input class=\"_input_1svni_78\" name=\"9fd0020d-14f0-47f3-b076-f31e5eaa8295\" type=\"checkbox\"><div class=\"_fieldEntry_1e3gg_28 ashby-application-form-field-entry\" id=\"69bef76e-4ab4-4541-8e0d-595047d13795_b617d074-3a16-46ec-bb02-550e30cb0e50\"><label class=\"_heading_f7cvd_52 _required_f7cvd_91 _label_1e3gg_42 ashby-application-form-question-title\"><div><input class=\"_input_80epu_28 _input_1e3gg_32 ashby-application-form-input-text\" id=\"b617d074-3a16-46ec-bb02-550e30cb0e50\" name=\"b617d074-3a16-46ec-bb02-550e30cb0e50\" type=\"text\" value=\"REDACTED\"><div class=\"_fieldEntry_1e3gg_28 ashby-application-form-field-entry\" id=\"69bef76e-4ab4-4541-8e0d-595047d13795_ce587bdf-31fa-4768-9e92-7741b7ad2317\"><label class=\"_heading_f7cvd_52 _required_f7cvd_91 _label_1e3gg_42 ashby-application-form-question-title\"><div class=\"_description_1e3gg_48 ashby-application-form-question-description\"><p><div><input class=\"_input_80epu_28 _input_1e3gg_32 ashby-application-form-input-text\" id=\"ce587bdf-31fa-4768-9e92-7741b7ad2317\" name=\"ce587bdf-31fa-4768-9e92-7741b7ad2317\" type=\"text\" value=\"REDACTED\"><div class=\"_section_5yu8i_86 ashby-application-form-section-container\"><div class=\"_sectionHeader_5yu8i_93 ashby-application-form-section-header\"><h2 class=\"_title_5yu8i_99 ashby-application-form-section-header-title\"><div class=\"_sectionDescription_5yu8i_105 ashby-application-form-section-header-description\"><p><div class=\"_fieldEntry_1e3gg_28 ashby-application-form-field-entry\" id=\"69bef76e-4ab4-4541-8e0d-595047d13795_7d3da580-9e6d-494f-a63b-0a889e0a157a\"><label class=\"_heading_f7cvd_52 _required_f7cvd_91 _label_1e3gg_42 ashby-application-form-question-title\"><textarea class=\"_input_zf0lr_28 _input_1e3gg_32  ashby-application-form-input-textarea\" id=\"7d3da580-9e6d-494f-a63b-0a889e0a157a\" name=\"7d3da580-9e6d-494f-a63b-0a889e0a157a\"><div class=\"_fieldEntry_1e3gg_28 ashby-application-form-field-entry\" id=\"69bef76e-4ab4-4541-8e0d-595047d13795_e8a6b6ee-0550-4c69-85ab-05bd9b26c702\"><label class=\"_heading_f7cvd_52 _required_f7cvd_91 _label_1e3gg_42 ashby-application-form-question-title\"><textarea class=\"_input_zf0lr_28 _input_1e3gg_32  ashby-application-form-input-textarea\" id=\"e8a6b6ee-0550-4c69-85ab-05bd9b26c702\" name=\"e8a6b6ee-0550-4c69-85ab-05bd9b26c702\"><div class=\"_fieldEntry_1e3gg_28 ashby-application-form-field-entry\" id=\"69bef76e-4ab4-4541-8e0d-595047d13795_c4b19ee4-d084-47fa-89df-ca00e63a7721\"><label class=\"_heading_f7cvd_52 _required_f7cvd_91 _label_1e3gg_42 ashby-application-form-question-title\"><textarea class=\"_input_zf0lr_28 _input_1e3gg_32  ashby-application-form-input-textarea\" id=\"c4b19ee4-d084-47fa-89df-ca00e63a7721\" name=\"c4b19ee4-d084-47fa-89df-ca00e63a7721\"><div class=\"_fieldEntry_1e3gg_28 ashby-application-form-field-entry\" id=\"69bef76e-4ab4-4541-8e0d-595047d13795_018585ea-12fd-472a-bdd6-9ef643dfabdd\"><label class=\"_heading_f7cvd_52  _label_1e3gg_42 ashby-application-form-question-title\"><div><input class=\"_input_80epu_28 _input_1e3gg_32 ashby-application-form-input-text\" id=\"018585ea-12fd-472a-bdd6-9ef643dfabdd\" name=\"018585ea-12fd-472a-bdd6-9ef643dfabdd\" type=\"text\" value=\"REDACTED\"><button class=\"_button_zyh3g_28 _primary_zyh3g_97  _greedy_zyh3g_221  _submitButton_5yu8i_411 ashby-application-form-submit-button\"><span><svg><path><footer class=\"_container_1jx4x_28\"><a class=\"_powered_1jx4x_58\" href=\"REDACTED\"><span><svg class=\"_wordmark_1jx4x_71\"><title><path><path><path><path><path><p class=\"_links_1jx4x_97\"><a class=\"_link_1jx4x_78\" href=\"REDACTED\"><a class=\"_link_1jx4x_78\" href=\"REDACTED\"><a class=\"_link_1jx4x_78\" href=\"REDACTED\"><div class=\"_toasts_1bmj4_58\"><div><div class=\"grecaptcha-badge\"><div class=\"grecaptcha-logo\"><iframe name=\"a-dtbc9sgjajjb\" role=\"presentation\" title=\"REDACTED\" src=\"REDACTED\"><div class=\"grecaptcha-error\"><textarea class=\"g-recaptcha-response\" id=\"g-recaptcha-response-100000\" name=\"g-recaptcha-response\"><iframe>",
+  "dom_samples": [
+    "<iframe name=\"a-dtbc9sgjajjb\" role=\"presentation\" title=\"REDACTED\" src=\"REDACTED\">"
+  ],
+  "frames": [
+    {
+      "host": "www.recaptcha.net",
+      "path": "/recaptcha/api2/anchor",
+      "visible": false,
+      "width": 256,
+      "height": 60
+    },
+    {
+      "host": "",
+      "path": "/",
+      "visible": false,
+      "width": 0,
+      "height": 0
+    }
+  ],
+  "network": [
+    {
+      "origin": "https://www.recaptcha.net",
+      "path_hash": "359709d6e90c7136",
+      "method": "GET",
+      "resource_type": "script",
+      "status": null
+    },
+    {
+      "origin": "https://www.gstatic.com",
+      "path_hash": "cd831c547780e034",
+      "method": "GET",
+      "resource_type": "script",
+      "status": null
+    },
+    {
+      "origin": "https://www.recaptcha.net",
+      "path_hash": "460636009b4752f8",
+      "method": "GET",
+      "resource_type": "document",
+      "status": null
+    },
+    {
+      "origin": "https://www.gstatic.com",
+      "path_hash": "9e2d2bc22b78879a",
+      "method": "GET",
+      "resource_type": "stylesheet",
+      "status": null
+    },
+    {
+      "origin": "https://www.gstatic.com",
+      "path_hash": "cd831c547780e034",
+      "method": "GET",
+      "resource_type": "script",
+      "status": null
+    },
+    {
+      "origin": "https://www.recaptcha.net",
+      "path_hash": "2b832fc31c792368",
+      "method": "GET",
+      "resource_type": "script",
+      "status": null
+    },
+    {
+      "origin": "https://www.gstatic.com",
+      "path_hash": "9580a65b737aba19",
+      "method": "GET",
+      "resource_type": "image",
+      "status": null
+    },
+    {
+      "origin": "https://www.gstatic.com",
+      "path_hash": "cd831c547780e034",
+      "method": "GET",
+      "resource_type": "other",
+      "status": null
+    }
+  ],
+  "pii_present": false
+}

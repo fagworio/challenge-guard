@@ -43,6 +43,7 @@ from .providers import (
     PROFILES,
     ResponseMarker,
     profile_for,
+    profile_for_frame,
     profile_for_host,
     profiles,
 )
@@ -87,6 +88,7 @@ __all__ = [
     "independent_sources",
     "merge",
     "profile_for",
+    "profile_for_frame",
     "profile_for_host",
     "profiles",
     "redact",
