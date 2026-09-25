@@ -183,19 +183,34 @@ class ChallengePolicy:
         self,
         provider: ChallengeProvider = ChallengeProvider.UNKNOWN,
         *,
+        human_required: bool = True,
         confidence: float = 0.0,
     ) -> ChallengeDecision:
-        """A espera por um humano acabou sem desfecho.
+        """O orcamento acabou sem desfecho. Nao e rejeicao.
 
-        Nao e `PROVIDER_REJECTED`: nada foi recusado — apenas nao terminou a
-        tempo. Continua precisando de humano, e o host decide se reoferece o
-        handoff.
+        `human_required` diz QUEM estava sendo esperado, porque as duas esperas
+        terminam no mesmo instante e significam coisas diferentes:
+
+        ```text
+        espera humana    -> human_observation_timeout, human_required=True
+        espera do provider -> provider_observation_timeout, human_required=False
+        ```
+
+        A versao anterior assumia sempre a primeira: um challenge que o provedor
+        resolve sozinho (`invisible`, `risk_assessment`) virava "precisa de
+        pessoa" exatamente quando o orcamento terminava — a contradicao de dizer
+        "espere sozinho" durante os rounds e "chame alguem" no fim.
         """
+        token = (
+            ReasonToken.HUMAN_OBSERVATION_TIMEOUT
+            if human_required
+            else ReasonToken.PROVIDER_OBSERVATION_TIMEOUT
+        )
         return ChallengeDecision(
             status=ChallengeDecisionStatus.UNKNOWN,
             provider=provider,
-            reason_token=ReasonToken.HUMAN_OBSERVATION_TIMEOUT.value,
-            human_required=True,
+            reason_token=token.value,
+            human_required=human_required,
             retry_allowed=True,
             confidence=confidence,
         )

@@ -96,6 +96,7 @@ Roadmap CG-001 .. CG-006 are implemented:
 | CG-035 | E2E: the same decision with Playwright direct and over CDP | done |
 | CG-036 | `jobsearch-agent` uses the public runtime | done in the host |
 | CG-038 | release 0.2.0 (wheel proven in an empty environment) | done |
+| CG-039 | capability-aware timeout (`provider_supported` never becomes human by timeout) | done |
 | CG-037 | remove the duplicated `challenge_resolution` in the host | **deferred** |
 | CG-016, CG-017 | visual classifier and its privacy gate | **deferred** |
 

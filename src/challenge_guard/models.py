@@ -115,6 +115,10 @@ class ReasonToken(str, Enum):
     #: A observacao humana expirou. NAO e rejeicao: nada foi recusado, apenas
     #: nao terminou a tempo.
     HUMAN_OBSERVATION_TIMEOUT = "human_observation_timeout"
+    #: A espera AUTONOMA pelo provedor expirou. Tambem nao e rejeicao, e tambem
+    #: nao e humano: um challenge que o provedor resolve sozinho nao pode virar
+    #: "precisa de pessoa" so porque o orcamento acabou.
+    PROVIDER_OBSERVATION_TIMEOUT = "provider_observation_timeout"
 
 
 @dataclass(frozen=True)

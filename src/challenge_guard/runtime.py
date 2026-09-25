@@ -158,6 +158,9 @@ class ChallengeRuntime:
         self._previous: ChallengeObservation | None = None
         self._validation: ValidationResult | None = None
         self._started = False
+        #: O orcamento estourou NESTE ciclo. Flag explicita: o runtime nao
+        #: descobre que expirou comparando o TEXTO do motivo da decisao.
+        self._timed_out = False
         self._scope = NetworkScope.empty()
         self._scoped: ScopedNetworkAdapter | None = None
         self._last_url = ""
@@ -396,6 +399,7 @@ class ChallengeRuntime:
 
     def timed_out(self) -> ChallengeDecision:
         """O orcamento acabou. Nunca e rejeicao: nada foi recusado, o tempo passou."""
+        self._timed_out = True
         decision = self._monitor.timed_out()
         budget = self._budget.describe()
         self._journal.emit(
@@ -418,8 +422,7 @@ class ChallengeRuntime:
         if observation is None or decision is None:
             raise ValueError("result requires at least one evaluated observation")
         status = _DECISION_TO_STATUS[decision.status]
-        expired = self._budget.exhausted_by != "" and decision.reason_token == "human_observation_timeout"
-        if expired:
+        if self._timed_out:
             status = "expired"
         return ChallengeRuntimeResult(
             detected=observation.detected,

@@ -220,9 +220,20 @@ class ChallengeMonitor:
         )
 
     def timed_out(self) -> ChallengeDecision:
-        """A espera por um humano terminou sem desfecho. Nunca e rejeicao."""
+        """O orcamento acabou sem desfecho. Nunca e rejeicao.
+
+        Quem estava sendo esperado sai do TIPO observado, e nao de uma suposicao:
+        `human_required` so quando a capability do tipo exige uma pessoa. Um
+        desafio que o provedor resolve sozinho nao vira humano por timeout.
+        """
         provider = self._session.provider if self._session is not None else ChallengeProvider.UNKNOWN
-        decision = self._policy.timed_out(provider)
+        challenge_type = self._session.challenge_type if self._session is not None else ChallengeType.UNKNOWN
+        from .resolution.capabilities import ChallengeCapability, capability_for
+
+        decision = self._policy.timed_out(
+            provider,
+            human_required=capability_for(challenge_type) is ChallengeCapability.HUMAN_REQUIRED,
+        )
         self._last_decision = decision
         return decision
 
