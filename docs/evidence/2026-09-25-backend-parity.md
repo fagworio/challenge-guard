@@ -87,6 +87,21 @@ desconecta o Playwright e nao mata um browser que nao lancou (ADR 0007).
    acao (`-p no:seleniumbase`, ou lancar o browser em outro processo). Registrado porque um host que
    instale SeleniumBase vai encontrar exatamente isso.
 
+## Limite do que isto certifica (nomeadamente)
+
+```text
+ISTO E:  paridade de BACKEND — a mesma fixture, o mesmo observer, a mesma policy,
+         a mesma decisao, com o browser nascendo de tres formas diferentes.
+ISTO NAO E, e nao deve ser chamado de: certificacao de challenge REAL.
+         Cloudflare, reCAPTCHA, hCaptcha de terceiros, board de ATS real e
+         aceitacao pelo provedor NAO foram exercitados aqui.
+```
+
+A fixture e local e determinista de proposito: um teste que dependesse de um
+desafio de terceiro em tempo real seria instavel e nao provaria reprodutibilidade
+nenhuma. O que se prova e a invariante "backend diferente != policy diferente";
+o resto continua pendente de credencial e de provider real.
+
 ## O que NAO foi usado
 
 ```text

@@ -121,7 +121,9 @@ Playwright launch              ->    (no endpoint needed)     ->    -> Playwrigh
 
 One observer, one policy, one result. `tools/measure_backends.py` measures the same fixture on every
 available launcher and fails if the decision differs; the capture is in
-[docs/evidence](docs/evidence/2026-09-25-backend-parity.md).
+[docs/evidence](docs/evidence/2026-09-25-backend-parity.md). That measurement is **backend parity
+certification** — not real-challenge certification: no third-party Cloudflare/reCAPTCHA/hCaptcha, no
+real ATS board and no provider acceptance were exercised.
 
 Why `seleniumbase` is **not** a dependency: its CDP Mode is documented by its own authors as *a
 stealth mode*, and the Playwright integration as *Stealthy Playwright Mode*. This library's contract
