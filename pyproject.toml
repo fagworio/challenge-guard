@@ -27,7 +27,12 @@ packages = ["src/challenge_guard"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q"
+# `-p no:seleniumbase`: o plugin de pytest do SeleniumBase cria um event loop e o
+# Playwright SINCRONO recusa iniciar dentro dele ("Sync API inside the asyncio
+# loop"). A biblioteca nao aplica `nest_asyncio` para contornar (isso patchearia
+# o loop de quem nos usa), entao a suite se protege de um plugin que ela nao usa.
+# Medido no ambiente da CG-035; ver docs/evidence/2026-09-25-backend-parity.md.
+addopts = "-q -p no:seleniumbase"
 pythonpath = ["src"]
 markers = [
     "requires_playwright: test needs the optional Playwright extra",
