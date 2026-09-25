@@ -58,6 +58,8 @@ ALLOWED_FIELDS = frozenset(
         "started_at",
         "finished_at",
         "page_reloaded",
+        "network_read",
+        "network_dropped",
         "notes",
     }
 )

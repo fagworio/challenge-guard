@@ -18,6 +18,20 @@ c) playwright-cdp    chrome --remote-debugging-port    needs_human  hcaptcha   c
 divergencias: []
 ```
 
+```text
+backend              lancador                          decisao      provider   tipo      conf   escopo(rede)  frames
+a) page              playwright-direct                 needs_human  hcaptcha   checkbox  0.80   0 em /1 fora  /widget
+b) playwright-cdp    seleniumbase.sb_cdp               needs_human  hcaptcha   checkbox  0.80   0 em /1 fora  /widget
+c) playwright-cdp    chrome --remote-debugging-port    needs_human  hcaptcha   checkbox  0.80   0 em /1 fora  /widget
+
+divergencias: []
+```
+
+A coluna `escopo(rede)` e o CG-028 aplicado: o host do fixture NAO e host de
+provider, entao o unico request observado fica FORA do escopo declarado e nao
+chega ao observador — de forma identica nos tres backends. A rede crua continua
+auditavel no adapter interno; o que muda e o que o guard LE.
+
 Cada backend rodou em um **subprocesso proprio**. Isso nao e detalhe: o SeleniumBase aplica
 `nest_asyncio` para conviver com Playwright no mesmo processo, e medir os dois no mesmo
 interpretador mediria a convivencia, e nao a decisao. Um host real escolhe um backend por processo.
@@ -29,6 +43,29 @@ CG-A03/A04  SeleniumBase CDP inicia e publica endpoint  -> http://127.0.0.1:<efe
 CG-A05      Playwright conecta no MESMO browser (connect_over_cdp)
 CG-A06..A10 o adapter existente entrega DOM, frames e rede normalmente pelo CDP
 CG-A19      Playwright direto e SeleniumBase/CDP dao a MESMA decisao, campo a campo
+```
+
+## Correcoes que a revisao do host expos
+
+Tres defeitos que os testes anteriores nao pegavam, todos fechados com teste que
+falha se voltarem:
+
+```text
+observation_layer_violations()   o `ast.parse` estava FORA do `for`:
+                                 contava todos os arquivos de browser/ e
+                                 analisava so o ULTIMO. O selfcheck passava
+                                 porque a sonda era o ultimo arquivo. Agora
+                                 varre todos, e ha teste com a violacao em
+                                 `a_violation.py` e arquivo limpo depois.
+                                 Varredura sem arquivo LEVANTA (era o unico
+                                 guard sem essa protecao).
+NetworkScope                     era construido e nunca usado. Agora
+                                 `ScopedNetworkAdapter` FILTRA o que o
+                                 observador le, e o journal conta
+                                 `network_read`/`network_dropped`.
+close_browser=True               permitia ao guard fechar um browser que nao
+                                 lancou. O parametro NAO EXISTE MAIS: posse e
+                                 invariante (ADR 0007), nao opcao.
 ```
 
 ## Posse do browser (medido, nao combinado)

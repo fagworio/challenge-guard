@@ -107,6 +107,47 @@ class NetworkScope:
             )
 
 
+class ScopedNetworkAdapter:
+    """Envolve um adapter e limita o que ele ENTREGA ao guard.
+
+    O `NetworkScope` sozinho e consultivo: ele classifica o que ja foi lido. Este
+    wrapper e o enforcement — o observador nunca ve um registro fora do escopo
+    declarado. Hoje o `NetworkObserver` tambem so produz sinal para hosts de
+    provider; a diferenca e que aqui isso deixa de depender de o observador
+    continuar se comportando assim.
+
+    Transparente no resto: `name` e os outros metodos vem do adapter interno, para
+    que o lifecycle e a proveniencia continuem falando do backend real.
+    """
+
+    def __init__(self, inner: object, scope: NetworkScope) -> None:
+        self._inner = inner
+        self._scope = scope
+        self.dropped = 0
+        self.read = 0
+
+    def __getattr__(self, name: str) -> object:
+        return getattr(self._inner, name)
+
+    @property
+    def name(self) -> str:
+        return str(getattr(self._inner, "name", type(self._inner).__name__))
+
+    @property
+    def inner(self) -> object:
+        return self._inner
+
+    def collect_network(self) -> list[NetworkRecord]:
+        records = list(getattr(self._inner, "collect_network", list)() or [])
+        self.read = len(records)
+        kept = [record for record in records if self._scope.classify(record) is ScopeVerdict.CHALLENGE_RUNTIME]
+        self.dropped = len(records) - len(kept)
+        return kept
+
+    def describe_scope(self) -> dict[str, int]:
+        return {"network_read": self.read, "network_in_scope": self.read - self.dropped, "network_dropped": self.dropped}
+
+
 def _safe_target(url: str) -> str:
     parsed = urlsplit(url)
     return f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
@@ -116,5 +157,6 @@ __all__ = [
     "NetworkScope",
     "NetworkScopeViolation",
     "ScopeVerdict",
+    "ScopedNetworkAdapter",
     "WRITE_METHODS",
 ]

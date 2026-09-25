@@ -15,7 +15,7 @@ from .dependency import (
     probe_clean_import,
 )
 from .lifecycle import BrowserLifecycle, LifecycleState, LifecycleViolation
-from .network_scope import NetworkScope, NetworkScopeViolation, ScopeVerdict
+from .network_scope import NetworkScope, NetworkScopeViolation, ScopeVerdict, ScopedNetworkAdapter
 from .observation import (
     ObservationBoundaryViolation,
     assert_observation_layer_is_factual,
@@ -50,6 +50,7 @@ __all__ = [
     "ProvenanceJournal",
     "ProvenanceViolation",
     "ScopeVerdict",
+    "ScopedNetworkAdapter",
     "SensitiveMaterialLeak",
     "SubmissionIsolationViolation",
     "assert_no_sensitive_material",

@@ -142,6 +142,14 @@ def _observe(url: str, page, runtime) -> dict:
     observation = runtime.monitor.observation
     result = runtime.result()
     adapter = runtime.monitor.adapter
+    # A rede CRUA (fato do browser) e a que interessa para comparar backends: o
+    # escopo do guard filtra o que o observador le, e isso ja e igual por
+    # construcao. O `scoped` reporta quantos registros entraram e quantos ficaram
+    # de fora, para a evidencia nao perder o fato.
+    inner = getattr(getattr(runtime, "scoped_adapter", None), "inner", None) or adapter
+    scope_report = (
+        runtime.scoped_adapter.describe_scope() if getattr(runtime, "scoped_adapter", None) is not None else {}
+    )
     return {
         "provider": result.provider,
         "challenge_type": result.challenge_type,
@@ -154,7 +162,9 @@ def _observe(url: str, page, runtime) -> dict:
         "evidence_sources": sorted(observation.evidence_sources),
         "dom_signals": sorted(observation.dom_signals),
         "frames": sorted(frame.url for frame in adapter.collect_frames()),
-        "network_hosts": sorted({record.url for record in adapter.collect_network()}),
+        "network_hosts": sorted({record.url for record in inner.collect_network()}),
+        "network_in_scope": int(scope_report.get("network_in_scope", 0)),
+        "network_dropped": int(scope_report.get("network_dropped", 0)),
         "backend": result.backend,
     }
 
@@ -233,6 +243,9 @@ _COMPARABLE = (
     "evidence_sources",
     "dom_signals",
     "frames",
+    "network_hosts",
+    "network_in_scope",
+    "network_dropped",
 )
 
 

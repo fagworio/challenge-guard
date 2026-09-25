@@ -202,11 +202,13 @@ def test_both_backends_reach_the_same_decision_on_the_same_fixture(server: str, 
     with _DirectBackend() as (page, runtime):
         direct_decision, direct_observation, direct_frames, direct_network = _observe_fixture(server, page, runtime)
         direct_result = runtime.result()
+        direct_runtime = runtime
         runtime.close()
 
     with _CdpBackend(cdp_endpoint) as (page, runtime):
         cdp_decision, cdp_observation, cdp_frames, cdp_network = _observe_fixture(server, page, runtime)
         cdp_result = runtime.result()
+        cdp_runtime = runtime
         runtime.close()
 
     # decisao: identica, campo a campo que importa
@@ -234,17 +236,21 @@ def test_both_backends_reach_the_same_decision_on_the_same_fixture(server: str, 
     assert direct_frame_urls == cdp_frame_urls
     assert any(url.endswith(WIDGET_PATH) for url in direct_frame_urls)
 
-    # rede: os dois veem os MESMOS fatos do fixture
+    # rede: o ESCOPO decide o que chega ao observador (CG-028 aplicado).
+    # O host do fixture nao e host de provider, entao nada dele entra — e isso
+    # tem de ser IGUAL nos dois backends. A rede crua continua auditable no
+    # adapter interno, que e o que o host enxerga se precisar.
     def paths(records):
         return {record.url.split("?")[0] for record in records if record.url}
 
-    direct_paths, cdp_paths = paths(direct_network), paths(cdp_network)
-    assert direct_paths == cdp_paths
-    assert any(item.endswith(WIDGET_PATH) for item in direct_paths)
-    # E a navegacao do frame principal LIMPA os proprios registros: o request que
-    # causou a navegacao e dado transitorio (CG-A12). O que sobrevive e o que
-    # aconteceu DEPOIS dela — aqui, o iframe do widget.
-    assert not any(item.endswith(CHALLENGE_PATH) for item in direct_paths)
+    assert paths(direct_network) == paths(cdp_network) == set()
+    for runtime in (direct_runtime, cdp_runtime):
+        scoped = runtime.scoped_adapter
+        assert scoped is not None
+        assert scoped.describe_scope()["network_in_scope"] == 0
+    # A navegacao do frame principal LIMPA os proprios registros (CG-A12), e o
+    # iframe do fixture continua visivel no adapter INTERNO (fato do browser),
+    # so nao e trafego de challenge.
 
 
 def test_the_guard_does_not_kill_a_browser_it_did_not_launch(server: str, cdp_endpoint: str, tmp_path: Path):
@@ -309,15 +315,30 @@ def test_a_second_adapter_on_a_live_page_is_refused(cdp_endpoint: str):
         runtime.close()
 
 
-def test_submission_shaped_traffic_is_never_classified_as_challenge(server: str, cdp_endpoint: str):
-    """Escopo de rede no browser real: os fatos observados nao viram submissao."""
+def test_submission_shaped_traffic_never_reaches_the_observer(server: str, cdp_endpoint: str):
+    """CG-028 aplicado no browser real, nas duas pontas do escopo.
+
+    O adapter INTERNO ve o trafego do fixture (fato do browser); o observador ve
+    apenas o que o escopo declarado permite. Nada de candidatura vira sinal de
+    challenge, e o que e descartado e CONTADO, nao sumido.
+    """
     session = PlaywrightCdpSession.from_endpoint(cdp_endpoint)
     with ChallengeRuntime(session=session) as runtime:
         page = runtime.session.page
         page.goto(f"{server}{CHALLENGE_PATH}", wait_until="load")
         runtime.evaluate()
-        grouped = runtime.scope.classify_all(runtime.monitor.adapter.collect_network())
-    assert grouped[ScopeVerdict.SUBMISSION_CANDIDATE] == []
+        scoped = runtime.scoped_adapter
+        assert scoped is not None
+        raw = scoped.inner.collect_network()
+        observed = runtime.monitor.adapter.collect_network()
+        report = scoped.describe_scope()
+
+    assert report["network_read"] == len(raw)
+    assert report["network_in_scope"] == len(observed)
+    assert observed == [], "host de fixture nao e host de provider"
+    # E o classificador nomeia o que ficou de fora, em vez de chama-lo de challenge.
+    grouped = runtime.scope.classify_all(raw)
+    assert grouped[ScopeVerdict.CHALLENGE_RUNTIME] == []
 
 
 def test_the_default_factory_returns_a_started_client():

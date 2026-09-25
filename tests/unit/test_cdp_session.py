@@ -206,12 +206,16 @@ def test_close_does_not_kill_a_browser_the_session_did_not_launch():
     assert session.connected is False
 
 
-def test_close_browser_is_opt_in_for_hosts_that_own_the_browser():
+def test_there_is_no_way_to_close_a_browser_the_session_did_not_launch():
+    """Posse e invariante, nao opcao: o parametro nao existe mais."""
     browser = FakeBrowser([FakeContext([FakePage()])])
     session, playwright, _chromium = _session(browser)
     session.start()
-    session.close(close_browser=True)
-    assert browser.closed == 1 and playwright.stopped == 1
+    with pytest.raises(TypeError):
+        session.close(close_browser=True)  # type: ignore[call-arg]
+    session.close()
+    assert browser.closed == 0, "quem lancou desliga"
+    assert playwright.stopped == 1
 
 
 def test_close_is_idempotent():
@@ -249,3 +253,19 @@ def test_connect_helper_accepts_a_url_string():
     session = connect("http://127.0.0.1:9222")
     assert session.endpoint.port == 9222
     assert session.name == "playwright-cdp"
+
+
+def test_the_scope_wrapper_wraps_the_session_without_wrapping_its_name():
+    """A sessao de browser nao muda; o que muda e o que o observer LE."""
+    from challenge_guard.guards.network_scope import NetworkScope, ScopedNetworkAdapter
+    from challenge_guard.observers import NetworkRecord
+
+    class Inner:
+        name = "playwright"
+
+        def collect_network(self):
+            return [NetworkRecord(url="https://hcaptcha.com/1/api.js", method="GET")]
+
+    scoped = ScopedNetworkAdapter(Inner(), NetworkScope.from_providers(["hcaptcha"]))
+    assert scoped.name == "playwright"
+    assert len(scoped.collect_network()) == 1

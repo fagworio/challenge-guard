@@ -30,7 +30,7 @@ from typing import Any, Iterable
 
 from .browser.cdp import BrowserSession, CdpEndpoint
 from .guards.lifecycle import BrowserLifecycle, LifecycleViolation
-from .guards.network_scope import NetworkScope
+from .guards.network_scope import NetworkScope, ScopedNetworkAdapter
 from .guards.provenance import ProvenanceJournal
 from .guards.sensitive_material import assert_no_sensitive_material
 from .models import (
@@ -159,6 +159,7 @@ class ChallengeRuntime:
         self._validation: ValidationResult | None = None
         self._started = False
         self._scope = NetworkScope.empty()
+        self._scoped: ScopedNetworkAdapter | None = None
         self._last_url = ""
 
     # -- propriedades ----------------------------------------------------------
@@ -182,6 +183,11 @@ class ChallengeRuntime:
     @property
     def scope(self) -> NetworkScope:
         return self._scope
+
+    @property
+    def scoped_adapter(self) -> ScopedNetworkAdapter | None:
+        """O adapter que o observador de fato usa (escopo aplicado)."""
+        return self._scoped
 
     @property
     def session(self) -> BrowserSession | None:
@@ -212,15 +218,22 @@ class ChallengeRuntime:
         self._lifecycle.mark_started(self.backend)
         if self._session is not None:
             self._page = self._session.start()
-        if self._page is not None:
-            if self._adapter is None:
-                self._monitor.attach(self._page)
-                attached_name = "playwright"
-            else:
-                self._monitor.attach_adapter(self._adapter, self._page)
-                attached_name = str(getattr(self._adapter, "name", type(self._adapter).__name__))
-            self._lifecycle.mark_attached(attached_name)
         self._scope = NetworkScope.from_providers()
+        if self._page is not None:
+            inner = self._adapter
+            if inner is None:
+                from .browser.playwright import PlaywrightChallengeAdapter
+
+                inner = PlaywrightChallengeAdapter()
+            # CG-028 aplicado: o observador nunca ve um registro fora do escopo
+            # declarado. O wrapper e transparente no resto (nome, reset, URL), e
+            # por isso o lifecycle e a proveniencia continuam falando do backend
+            # real. `NetworkObserver` tambem so sinaliza hosts de provider; a
+            # diferenca e que agora isso nao depende de o observador continuar
+            # se comportando assim.
+            self._scoped = ScopedNetworkAdapter(inner, self._scope)
+            self._monitor.attach_adapter(self._scoped, self._page)
+            self._lifecycle.mark_attached(self._scoped.name)
         self._started = True
         self._journal.emit(
             "runtime_started",
@@ -233,17 +246,18 @@ class ChallengeRuntime:
             self._journal.emit("runtime_started", backend=self.backend, **self._endpoint.describe())
         return self
 
-    def close(self, *, close_browser: bool = False) -> None:
-        """Detach e desconexao. Nunca mata um browser que nao foi lancado aqui."""
+    def close(self) -> None:
+        """Detach e desconexao. Nunca mata um browser que nao foi lancado aqui.
+
+        Nao ha parametro para fechar o browser remoto: posse e invariante
+        (ADR 0007), e o host que lancou e quem desliga.
+        """
         self._monitor.detach()
         self._lifecycle.mark_detached()
         if self._session is not None:
             close = getattr(self._session, "close", None)
             if callable(close):
-                try:
-                    close(close_browser=close_browser)
-                except TypeError:
-                    close()
+                close()
         self._lifecycle.mark_closed()
         self._journal.emit("runtime_closed", backend=self.backend, finished_at=_now())
         self._started = False
@@ -293,6 +307,9 @@ class ChallengeRuntime:
             browser_write_sent=browser_write_sent,
             submission_confirmed=submission_confirmed,
         )
+        scope_report: dict[str, int] = {}
+        if self._scoped is not None:
+            scope_report = self._scoped.describe_scope()
         self._journal.emit(
             "observation",
             session_id=observation.session_id,
@@ -302,6 +319,8 @@ class ChallengeRuntime:
             detected=observation.detected,
             confidence=observation.confidence,
             round=self._budget.rounds,
+            network_read=int(scope_report.get("network_read", 0)),
+            network_dropped=int(scope_report.get("network_dropped", 0)),
         )
         return observation
 

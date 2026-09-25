@@ -64,9 +64,11 @@ Tres consequencias, todas verificaveis por maquina:
 2. **A ponte e neutra.** `CdpEndpoint` e validado e nao guarda nada alem de host/porta. A sessao nao
    liga modo UC, nao reescreve fingerprint, nao injeta script e nao desabilita sinal de automacao —
    nao ha, no codigo, nenhuma opcao para isso.
-3. **A posse do browser e explicita.** `PlaywrightCdpSession.close()` **desconecta** e nao mata o
-   browser: quem lancou (o host) desliga. Um guard que fechasse um browser que nao lancou seria
-   destrutivo, e um guard que "adotasse" o browser seria o comeco de esconder quem o controla.
+3. **A posse do browser e invariante, nao opcao.** `PlaywrightCdpSession.close()` **desconecta** e
+   nao mata o browser: quem lancou (o host) desliga. A versao inicial tinha
+   `close(close_browser=True)`, que na pratica permitia ao guard matar um browser que ele nao
+   lancou — convencao disfarcada de parametro. Ele foi removido: uma sessao que so sabe CONECTAR
+   nao pode ter a opcao de fechar o que nao e dela.
 
 O ganho do roadmap continua inteiro: **um unico observer** (`PlaywrightChallengeAdapter`), o mesmo
 para qualquer backend, e a decisao provada identica nos dois caminhos (CG-035).
@@ -87,6 +89,9 @@ mesma decisao — e isso e exatamente o que CG-035 mede.
   nunca escolhido por import implicito.
 - `ChallengeRuntime` recebe **ou** uma `Page` **ou** um `CdpEndpoint`; os dois produzem o mesmo
   `ChallengeRuntimeResult`.
+- O escopo de rede e **aplicado**, nao consultivo: o adapter entregue ao observador passa por
+  `ScopedNetworkAdapter`, e o que fica fora do escopo declarado nao chega a observacao (com contagem
+  no journal). Um guard que "sabe" o escopo e entrega tudo assim mesmo nao protege nada.
 - O CI ganha dois jobs novos: um que verifica dependencia opcional (importar o pacote sem
   `playwright`/`seleniumbase` instalados) e outro que verifica que o pacote nao importa
   `seleniumbase` em nenhum modulo.

@@ -132,6 +132,34 @@ def test_the_observation_scan_finds_a_deciding_adapter(tmp_path: Path):
     assert any("needs_human" in item for item in violations), violations
 
 
+def test_the_observation_scan_reads_EVERY_file_not_just_the_last(tmp_path: Path):
+    """O defeito real: `ast.parse` fora do laco analisava so o ultimo arquivo.
+
+    A violacao fica em `a_violation.py` e um arquivo LIMPO vem depois na ordem
+    alfabetica. Um guard que so olha o ultimo arquivo passa neste teste por
+    acidente; ele tem de falhar.
+    """
+    root = _probe_tree(tmp_path)
+    browser = root / "challenge_guard" / "browser"
+    (browser / "a_violation.py").write_text(
+        "DECISION = 'provider_rejected'\n",
+        encoding="utf-8",
+    )
+    (browser / "z_clean.py").write_text("VALUE = 'challenge_detected'\n", encoding="utf-8")
+    violations = observation_layer_violations(root)
+    assert any(item.startswith("a_violation.py:") for item in violations), violations
+
+
+def test_the_observation_scan_refuses_to_pass_on_an_empty_tree(tmp_path: Path):
+    """Varredura vazia nao pode ser lida como 'fronteira intacta'."""
+    from challenge_guard.guards.observation import ObservationBoundaryViolation
+
+    empty = tmp_path / "challenge_guard" / "browser"
+    empty.mkdir(parents=True)
+    with pytest.raises(ObservationBoundaryViolation, match="scans nothing"):
+        observation_layer_violations(tmp_path)
+
+
 def test_the_observation_scan_allows_documentation_of_the_boundary(tmp_path: Path):
     """Docstring PODE nomear o proibido: documentar a fronteira e o objetivo."""
     root = _probe_tree(tmp_path)

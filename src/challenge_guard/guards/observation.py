@@ -60,13 +60,24 @@ def _docstring_nodes(tree: ast.Module) -> set[int]:
 
 
 def observation_layer_violations(package_root: Path) -> list[str]:
-    """Nomes de decisao usados como codigo na camada de browser."""
+    """Nomes de decisao usados como codigo na camada de browser.
+
+    Varre TODOS os arquivos de `browser/`. A primeira versao deste guard tinha o
+    `ast.parse` fora do `for`: contava todos os arquivos e analisava apenas o
+    ULTIMO. O selfcheck passava porque o arquivo de sonda era o ultimo — ou seja,
+    a prova de que o guard funciona era justamente a que nao provava nada. O
+    teste que fecha isso tem a violacao em `a_violation.py` e um arquivo limpo
+    depois, para que a ordem alfabetica nao ajude.
+    """
     violations: list[str] = []
     scanned = 0
     source = Path(package_root).joinpath(*OBSERVATION_PACKAGE)
-    if source.is_dir():
-        for path in sorted(source.rglob("*.py")):
-            scanned += 1
+    if not source.is_dir():
+        raise ObservationBoundaryViolation(
+            f"observation scan found no directory at {source}: a scan that scans nothing cannot pass"
+        )
+    for path in sorted(source.rglob("*.py")):
+        scanned += 1
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
         docstrings = _docstring_nodes(tree)
         for node in ast.walk(tree):
@@ -82,6 +93,10 @@ def observation_layer_violations(package_root: Path) -> list[str]:
             for candidate in found:
                 if candidate in DECISION_NAMES:
                     violations.append(f"{path.name}:{node.lineno} usa {candidate}")
+    if scanned == 0:
+        raise ObservationBoundaryViolation(
+            f"observation scan found no files under {source}: a scan that scans nothing cannot pass"
+        )
     return violations
 
 

@@ -58,7 +58,12 @@ class FakeAdapter:
         return []
 
     def collect_network(self) -> list[NetworkRecord]:
-        return [NetworkRecord(url="https://hcaptcha.com/1/api.js", method="GET")]
+        # Um registro de challenge (dentro do escopo declarado) e um de
+        # candidatura (fora dele): o runtime so pode entregar o primeiro.
+        return [
+            NetworkRecord(url="https://hcaptcha.com/1/api.js", method="GET"),
+            NetworkRecord(url="https://boards.example.test/jobs/1/applications", method="POST"),
+        ]
 
     def collect_responses(self) -> list[ResponseRecord]:
         return []
@@ -72,7 +77,7 @@ class FakeSession:
         self.started = 0
         self.closed = 0
         self.resets = 0
-        self.close_browser_flags: list[bool] = []
+        self.closed_with: list[dict] = []
 
     def start(self) -> object:
         self.started += 1
@@ -81,9 +86,9 @@ class FakeSession:
     def reset(self) -> None:
         self.resets += 1
 
-    def close(self, *, close_browser: bool = False) -> None:
+    def close(self, **kwargs: object) -> None:
         self.closed += 1
-        self.close_browser_flags.append(close_browser)
+        self.closed_with.append(dict(kwargs))
 
 
 # --- modo core -----------------------------------------------------------------
@@ -210,7 +215,7 @@ def test_an_injected_adapter_is_used_and_named():
         assert result.backend == "fake-cdp"
         assert result.provider == "hcaptcha"
     assert session.started == 1 and session.closed == 1
-    assert session.close_browser_flags == [False], "o runtime nao mata um browser que nao lancou"
+    assert session.closed_with == [{}], "o runtime nao decide sobre um browser que nao lancou"
 
 
 def test_navigation_resets_transient_data_before_observing_again():
@@ -274,3 +279,22 @@ def test_provenance_can_be_reconstructed_after_close():
     assert provenance.challenge_type == ChallengeType.CHECKBOX.value
     assert provenance.finished is True
     assert provenance.started_at and provenance.finished_at
+
+
+# --- CG-028: o escopo FILTRA o que o observador le -------------------------------
+
+
+def test_the_runtime_only_hands_the_observer_records_inside_the_declared_scope():
+    adapter = FakeAdapter()
+    session = FakeSession()
+    with ChallengeRuntime(session=session, adapter=adapter) as runtime:
+        runtime.evaluate()
+        scoped = runtime.scoped_adapter
+        assert scoped is not None
+        assert scoped.describe_scope() == {"network_read": 2, "network_in_scope": 1, "network_dropped": 1}
+        kept = runtime.monitor.adapter.collect_network()
+        assert [record.url for record in kept] == ["https://hcaptcha.com/1/api.js"]
+        # O wrapper e transparente: o nome continua sendo o do backend real.
+        assert runtime.monitor.adapter_name == "fake-adapter"
+    counts = [event for event in runtime.journal.events if event["kind"] == "observation"]
+    assert counts and counts[0]["network_read"] == 2 and counts[0]["network_dropped"] == 1

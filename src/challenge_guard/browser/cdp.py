@@ -16,8 +16,8 @@ desabilitar sinal de automacao — nao porque estejam desligadas, mas porque **n
 existem** no codigo.
 
 Posse: quem lanca, desliga. `PlaywrightCdpSession.close()` desconecta o
-Playwright e NAO mata o browser remoto; `close(close_browser=True)` existe
-apenas para quem lancou o browser e quer encerra-lo junto.
+Playwright e NAO mata o browser remoto — e nao existe parametro para faze-lo.
+Esta sessao so sabe conectar; um browser que ela nao lancou nao e dela.
 """
 
 from __future__ import annotations
@@ -215,18 +215,15 @@ class PlaywrightCdpSession:
         """
         self._page = None
 
-    def close(self, *, close_browser: bool = False) -> None:
+    def close(self) -> None:
         """Desconecta. Idempotente.
 
-        `close_browser=False` (default) e a regra de posse: o browser foi lancado
-        pelo host, e o guard nao o mata. Playwright encerra o driver e a conexao
-        cai; o Chrome remoto continua vivo.
+        Posse e INVARIANTE, nao opcao: esta sessao so sabe CONECTAR, entao nunca
+        pode fechar o browser remoto. A versao anterior tinha
+        `close(close_browser=True)`, que permitia ao guard matar um browser que
+        ele nao lancou — convencao com um parametro a mais. Quem lancou desliga
+        (o host), no processo dele.
         """
-        if close_browser and self._browser is not None:
-            try:
-                self._browser.close()
-            except Exception:
-                pass
         self._teardown()
 
     def _teardown(self) -> None:
