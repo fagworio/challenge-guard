@@ -11,9 +11,21 @@ responda, contorne ou falsifique um desafio. Nao ha `solve`, `bypass`,
 contrato: ver docs/adr/0001-challenge-boundary.md.
 """
 
-from .browser.protocol import BrowserChallengeAdapter
+from .browser.cdp import CdpConnectionError, CdpEndpoint, CdpEndpointError, PlaywrightCdpSession
+from .browser.protocol import BrowserChallengeAdapter, BrowserSession
 from .evidence import ChallengeEvidence, EvidenceLeak, redact
 from .fingerprint import structural_fingerprint
+from .guards import (
+    BrowserLifecycle,
+    ChallengeProvenance,
+    LifecycleViolation,
+    NetworkScope,
+    NetworkScopeViolation,
+    ProvenanceJournal,
+    ProvenanceViolation,
+    SensitiveMaterialLeak,
+    assert_no_sensitive_material,
+)
 from .handoff import HandoffContinuation, HumanHandoff, UnsafeHandoff, build_handoff
 from .models import (
     ChallengeDecision,
@@ -49,6 +61,18 @@ from .providers import (
     profile_for_host,
     profiles,
 )
+from .resolution import (
+    BudgetViolation,
+    ChallengeCapability,
+    ResolutionBudget,
+    RuntimeLimits,
+    ValidationResult,
+    capability_for,
+    capability_matrix,
+    validate_not_premature,
+    validate_progress,
+)
+from .runtime import ChallengeRuntime, ChallengeRuntimeResult
 from .requirements import (
     ChallengeNetworkPurpose,
     ChallengeNetworkRequirement,
@@ -72,6 +96,31 @@ from .session import (
 
 __all__ = [
     "BrowserChallengeAdapter",
+    "BrowserLifecycle",
+    "BrowserSession",
+    "BudgetViolation",
+    "CdpConnectionError",
+    "CdpEndpoint",
+    "CdpEndpointError",
+    "ChallengeCapability",
+    "ChallengeProvenance",
+    "ChallengeRuntime",
+    "ChallengeRuntimeResult",
+    "LifecycleViolation",
+    "NetworkScope",
+    "NetworkScopeViolation",
+    "PlaywrightCdpSession",
+    "ProvenanceJournal",
+    "ProvenanceViolation",
+    "ResolutionBudget",
+    "RuntimeLimits",
+    "SensitiveMaterialLeak",
+    "ValidationResult",
+    "assert_no_sensitive_material",
+    "capability_for",
+    "capability_matrix",
+    "validate_not_premature",
+    "validate_progress",
     "ChallengeDecision",
     "ChallengeEvidence",
     "ChallengeNetworkPurpose",
@@ -126,4 +175,4 @@ __all__ = [
     "structural_fingerprint",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

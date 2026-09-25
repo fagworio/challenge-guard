@@ -54,16 +54,52 @@ class ChallengeMonitor:
     # -- browser (opcional) ----------------------------------------------------
 
     def attach(self, browser: Any) -> None:
-        """Liga o monitor a um browser. Importa o adapter so aqui."""
+        """Atalho legado (CG-019): liga a uma page com o adapter do Playwright.
+
+        Importa o adapter SO aqui, para que `import challenge_guard` nunca puxe
+        uma dependencia opcional. Quem tem um backend proprio usa
+        `attach_adapter`.
+        """
         if self._adapter is None:
             from .browser.playwright import PlaywrightChallengeAdapter
 
             self._adapter = PlaywrightChallengeAdapter()
         self._adapter.attach(browser)
 
+    def attach_adapter(self, adapter: Any, page: Any | None = None) -> Any:
+        """Backend EXPLICITO (CG-024).
+
+        Antes disto o backend era um import escondido dentro de `attach`: nao
+        havia como observar com outro adapter (o do CDP, ou o de um teste) sem
+        substituir o modulo. Aqui ele e injetado.
+
+        Trocar de adapter com um ja anexado LEVANTA em vez de sobrescrever: o
+        anterior continuaria com listeners vivos na mesma pagina, e o mesmo sinal
+        seria contado duas vezes. A sequencia correta e `detach()` e depois
+        anexar.
+        """
+        from .guards.lifecycle import LifecycleViolation
+
+        if self._adapter is not None and self._adapter is not adapter:
+            raise LifecycleViolation("monitor already has an adapter; detach() before attaching another")
+        self._adapter = adapter
+        if page is not None:
+            adapter.attach(page)
+        return adapter
+
     def detach(self) -> None:
         if self._adapter is not None:
             self._adapter.detach()
+
+    @property
+    def adapter(self) -> Any | None:
+        return self._adapter
+
+    @property
+    def adapter_name(self) -> str:
+        if self._adapter is None:
+            return ""
+        return str(getattr(self._adapter, "name", "") or type(self._adapter).__name__)
 
     @property
     def attached(self) -> bool:

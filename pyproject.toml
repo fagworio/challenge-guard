@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "challenge-guard"
-version = "0.1.0"
+version = "0.2.0"
 description = "Detects, observes and classifies anti-bot challenges without ever solving them."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -12,6 +12,12 @@ license = { text = "MIT" }
 dependencies = []
 
 [project.optional-dependencies]
+# A ponte CDP -> Page e Playwright, e nada mais. Quem lanca o browser e o HOST;
+# `seleniumbase` NAO entra aqui (ADR 0007): o CDP Mode da SeleniumBase e descrito
+# pelo proprio fornecedor como stealth, e uma biblioteca cujo contrato e "nunca
+# esconder sinal de automacao" nao pode carregar isso como dependencia. Um host
+# que queira esse lancador instala no lado dele — `tools/measure_backends.py`
+# mostra o caminho, com a decisao provada igual nos dois backends.
 playwright = ["playwright>=1.48,<2"]
 vision = []
 all = ["playwright>=1.48,<2"]
@@ -25,4 +31,5 @@ addopts = "-q"
 pythonpath = ["src"]
 markers = [
     "requires_playwright: test needs the optional Playwright extra",
+    "integration: exercita browser/CDP real (Chromium instalado)",
 ]

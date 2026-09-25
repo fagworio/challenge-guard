@@ -27,3 +27,23 @@ class BrowserChallengeAdapter(Protocol):
     def collect_network(self) -> list[NetworkRecord]: ...
 
     def collect_responses(self) -> list[ResponseRecord]: ...
+
+
+class BrowserSession(Protocol):
+    """Lifecycle de uma sessao de browser, sem policy de challenge.
+
+    Existe separado do adapter de proposito: um adapter fala com a PAGE (DOM,
+    frames, rede); uma sessao fala com o BROWSER (conectar, escolher/renovar a
+    page, desconectar). Misturar os dois foi o que tornou o ciclo de vida fragil
+    em outros projetos — listener duplicado, page morta ainda referenciada,
+    conexao que sobrevive ao handoff.
+    """
+
+    def start(self) -> object: ...
+
+    @property
+    def page(self) -> object: ...
+
+    def reset(self) -> None: ...
+
+    def close(self) -> None: ...

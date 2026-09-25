@@ -5,3 +5,6 @@ __pycache__/
 .coverage
 dist/
 *.egg-info/
+# Artefatos de plugins de terceiros (SeleniumBase baixa drivers no cwd).
+downloaded_files/
+latest_logs/
